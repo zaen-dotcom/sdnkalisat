@@ -1,12 +1,17 @@
-package com.kalisat.edulearn;
+package com.kalisat.edulearn.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ScrollView;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kalisat.edulearn.Fragment.ProfileFragment;
+import com.kalisat.edulearn.R;
+import com.kalisat.edulearn.Fragment.SettingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +62,53 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             homeView.setVisibility(View.VISIBLE); // Pastikan homeView terlihat saat pertama kali dibuka
         }
+
+        View tugasLayout = findViewById(R.id.tugas_layout);
+        tugasLayout.setOnClickListener(v -> {
+            // Aksi saat Codiger diklik
+            Intent intent = new Intent(MainActivity.this, TugasActivity.class);
+            startActivity(intent);
+        });
+
+        // Bengkel (Nilai)
+        View nilaiLayout = findViewById(R.id.nilai_layout);
+        nilaiLayout.setOnClickListener(v -> {
+            // Aksi saat Bengkel diklik
+            Intent intent = new Intent(MainActivity.this, NilaiActivity.class);
+            startActivity(intent);
+        });
+
+        // Matematika (Latihan Soal)
+        View latsolLayout = findViewById(R.id.latsol_layout);
+        latsolLayout.setOnClickListener(v -> {
+            // Aksi saat Matematika diklik
+            Intent intent = new Intent(MainActivity.this, LatSolActivity.class);
+            startActivity(intent);
+        });
+
+        // Manajemen (Kelas)
+        View kelasLayout = findViewById(R.id.kelas_layout);
+        kelasLayout.setOnClickListener(v -> {
+            // Aksi saat Manajemen diklik
+            Intent intent = new Intent(MainActivity.this, KelasActivity.class);
+            startActivity(intent);
+        });
+
+        // Tambahkan listener untuk foto profil
+        ImageView fotoProfil = findViewById(R.id.fotoprofil);
+        fotoProfil.setOnClickListener(v -> {
+            // Berpindah ke ProfileFragment saat foto profil diklik
+            Fragment profileFragment = new ProfileFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, profileFragment)
+                    .addToBackStack(null)  // Tambahkan ke back stack
+                    .commit();
+            homeView.setVisibility(View.GONE); // Sembunyikan home view saat pindah ke ProfileFragment
+            isInHomeView = false; // Flag bahwa kita tidak lagi di home
+
+            // Perbarui status BottomNavigationView ke item profil (gunakan variabel existing)
+            bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
+        });
     }
 
     @Override
@@ -67,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
             isInHomeView = true;
             // Pop semua fragment untuk kembali ke home
             getSupportFragmentManager().popBackStackImmediate(null, getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+
+            // Set BottomNavigationView ke posisi Home
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         } else {
             // Jika sudah di home, keluar dari aplikasi
             super.onBackPressed();

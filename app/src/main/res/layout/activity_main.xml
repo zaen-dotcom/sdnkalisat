@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
     <!-- ScrollView untuk home layout -->
     <ScrollView
@@ -32,7 +32,7 @@
                 android:layout_marginEnd="24dp">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/fotoprofil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +50,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView3"
+                    app:layout_constraintStart_toEndOf="@+id/fotoprofil"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,6 +74,7 @@
                 android:orientation="horizontal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tugas_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="12dp"
@@ -103,8 +104,8 @@
                         android:id="@+id/textViewButton1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Codinger"
+                        android:layout_marginTop="8dp"
+                        android:text="Tugas"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -114,6 +115,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/nilai_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -143,8 +145,8 @@
                         android:id="@+id/textViewButton2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Bengkel"
+                        android:layout_marginTop="8dp"
+                        android:text="Nilai"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -163,6 +165,7 @@
                 android:orientation="horizontal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/latsol_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="12dp"
@@ -192,8 +195,8 @@
                         android:id="@+id/textViewButton3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Matematika"
+                        android:layout_marginTop="8dp"
+                        android:text="Latihan Soal"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -203,6 +206,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/kelas_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -221,6 +225,7 @@
                         android:id="@+id/imageViewIcon4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -232,8 +237,8 @@
                         android:id="@+id/textViewButton4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Manajemen"
+                        android:layout_marginTop="8dp"
+                        android:text="Kelas"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
