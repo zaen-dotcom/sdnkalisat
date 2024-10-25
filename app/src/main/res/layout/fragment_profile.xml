@@ -15,18 +15,15 @@
         android:elevation="4dp"
         android:gravity="center_vertical">
 
-        <!-- Icon Back -->
-        <!-- Jika perlu, tambahkan ikon kembali di sini -->
 
-        <!-- Tulisan "Profil" -->
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profil"
-            android:layout_marginStart="20dp"
-            android:textSize="20sp"
-            android:textColor="@android:color/black"
+            android:layout_marginStart="10dp"
+            android:textSize="30sp"
+            android:textColor="@color/biru_tua"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 
@@ -45,7 +42,8 @@
             android:gravity="center_horizontal">
 
             <!-- Bagian isi profil -->
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -53,9 +51,32 @@
                     android:id="@+id/imageView7"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_marginTop="65dp"
+                    android:layout_marginTop="70dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_profil" />
-            </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginBottom="11dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/bg_bulat" />
+
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/ic_camera" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Nama -->
             <LinearLayout
@@ -63,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="8dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -108,7 +129,7 @@
                     android:id="@+id/icon_info"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_tentang" />
+                    android:src="@drawable/ic_infoout" />
 
                 <LinearLayout
                     android:layout_width="0dp"
