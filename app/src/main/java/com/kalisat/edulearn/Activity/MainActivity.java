@@ -109,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
             // Perbarui status BottomNavigationView ke item profil (gunakan variabel existing)
             bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
         });
+
+
+        View lihatSemua = findViewById(R.id.lihat_semua);
+        lihatSemua.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, KursusActivity.class);
+            startActivity(intent);
+        });
+
+
+        View listKursus = findViewById(R.id.listkursus);
+        listKursus.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, KursusActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
