@@ -21,7 +21,7 @@ public class IntroActivity extends AppCompatActivity {
         // Menambahkan listener untuk klik di seluruh layar
         findViewById(R.id.main).setOnClickListener(v -> {
             // Intent untuk berpindah ke MainActivity
-            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+            Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
             startActivity(intent);
             finish(); // Menutup IntroActivity setelah pindah
         });

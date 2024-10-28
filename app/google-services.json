@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901676193199",
+    "project_id": "nekolympus",
+    "storage_bucket": "nekolympus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901676193199:android:be553e4fd7339ec9550b5a",
+        "android_client_info": {
+          "package_name": "com.kalisat.edulearn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL0ySLHYZ0IgcAEGViN5DqwbLEZUulAXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

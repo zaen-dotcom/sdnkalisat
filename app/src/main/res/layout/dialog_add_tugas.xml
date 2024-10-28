@@ -1,0 +1,96 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white"
+    android:elevation="4dp"
+    android:layout_gravity="center">
+
+    <!-- Judul Dialog -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buat Tugas"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Input Deskripsi Tugas -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Deskripsi Tugas"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTaskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Tombol Lampiran -->
+    <Button
+        android:id="@+id/btnLampiran"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lampiran"
+        android:backgroundTint="@color/biru_tua"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp"
+        android:paddingVertical="12dp" />
+
+    <!-- Keterangan Lampiran -->
+    <TextView
+        android:id="@+id/tvAddTugas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Belum ada lampiran"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Input Tenggat Waktu -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tenggat Waktu"
+        android:layout_marginBottom="24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTaskDeadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Tombol Batal dan Tugaskan -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Batal"
+            android:textColor="@color/biru_tua"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_marginEnd="16dp"/>
+
+        <Button
+            android:id="@+id/btnAssign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tugaskan"
+            android:backgroundTint="@color/biru_tua"
+            android:textColor="@android:color/white"
+            android:paddingVertical="8dp"/>
+    </LinearLayout>
+</LinearLayout>
