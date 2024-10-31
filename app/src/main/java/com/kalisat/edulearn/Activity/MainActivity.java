@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kalisat.edulearn.Fragment.NotifFragment;
 import com.kalisat.edulearn.Fragment.ProfileFragment;
 import com.kalisat.edulearn.R;
 import com.kalisat.edulearn.Fragment.SettingFragment;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
-
             if (item.getItemId() == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
                 isInHomeView = false; // Sekarang bukan di home
@@ -45,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 // Keluarkan fragment saat di home
                 getSupportFragmentManager().popBackStackImmediate(null, getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 selectedFragment = null;
+            } else if (item.getItemId() == R.id.navigation_notif) {
+                selectedFragment = new NotifFragment(); // Mengatur NotifFragment sebagai fragment yang ditampilkan
+                isInHomeView = false; // Sekarang bukan di home
+                homeView.setVisibility(View.GONE); // Sembunyikan home view
             }
+
 
             // Mengganti fragment hanya jika fragment lain yang dipilih
             if (selectedFragment != null) {

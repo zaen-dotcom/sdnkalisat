@@ -35,10 +35,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Cek jika user sudah login
-        if (mAuth.getCurrentUser() != null) {
-            // Langsung pindah ke MainActivity jika user sudah login
-            navigateToMainActivity();
-        }
+//        if (mAuth.getCurrentUser() != null) {
+//            // Langsung pindah ke MainActivity jika user sudah login
+//            navigateToMainActivity();
+//        }
 
         // Inisialisasi Views
         etEmail = findViewById(R.id.etEmail);
