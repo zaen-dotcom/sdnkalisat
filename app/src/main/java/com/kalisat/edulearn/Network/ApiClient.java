@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2/mobile-api/"; // Pastikan diakhiri dengan /
+    private static final String BASE_URL = "http://10.0.2.2/mobile-api/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             Gson gson = new GsonBuilder()
-                    .setLenient() // Mengatur agar Gson menerima JSON yang kurang ketat
+                    .setLenient()
                     .create();
 
             retrofit = new Retrofit.Builder()

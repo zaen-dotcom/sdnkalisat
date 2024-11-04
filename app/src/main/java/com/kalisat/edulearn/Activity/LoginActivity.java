@@ -2,8 +2,9 @@ package com.kalisat.edulearn.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;  // Import Log for debugging
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,18 +21,27 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etEmail, etPassword;
-    private Button btnSignIn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Periksa apakah pengguna sudah login
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            // Jika sudah login, pindah ke MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Tutup LoginActivity agar pengguna tidak bisa kembali ke sini
+            return; // Hentikan eksekusi onCreate() agar elemen UI tidak diinisialisasi
+        }
+
         // Inisialisasi elemen UI
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        btnSignIn = findViewById(R.id.btnSignIn);
+        EditText etEmail = findViewById(R.id.etEmail);
+        EditText etPassword = findViewById(R.id.etPassword);
+        Button btnSignIn = findViewById(R.id.btnSignIn);
 
         // Instance Retrofit
         ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
@@ -69,22 +79,28 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d("LoginActivity", "Response: " + response.body().toString());
 
                                 if (response.body().isStatus()) {
-                                    // Menentukan peran berdasarkan role ID
-                                    String roleMessage;
-                                    int roleId = response.body().getRole();
+                                    // Simpan status login
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean("isLoggedIn", true); // Simpan status login
+                                    editor.apply();
 
-                                    switch (roleId) {
-                                        case 1:
+                                    // Menentukan peran berdasarkan role sebagai String
+                                    String role = response.body().getRole();
+                                    String roleMessage;
+
+                                    switch (role.toLowerCase()) {
+                                        case "admin":
                                             roleMessage = "Admin";
                                             break;
-                                        case 2:
+                                        case "guru":
                                             roleMessage = "Guru";
                                             break;
-                                        case 3:
+                                        case "siswa":
                                             roleMessage = "Siswa";
                                             break;
                                         default:
-                                            roleMessage = "Tidak diketahui";
+                                            roleMessage = "Peran tidak diketahui";
                                             break;
                                     }
 
@@ -115,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     }
-
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {

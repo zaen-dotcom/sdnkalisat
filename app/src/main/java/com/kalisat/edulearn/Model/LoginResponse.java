@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class LoginResponse {
     private boolean status;
     private String message;
-    private int role;  // Ubah tipe role dari String ke int
+    private String role;
 
     @SerializedName("user")
     private User user;
@@ -27,11 +27,11 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public int getRole() {  // Ubah getter role
+    public String getRole() {  // Getter role menggunakan String
         return role;
     }
 
-    public void setRole(int role) {  // Ubah setter role
+    public void setRole(String role) {  // Setter role menggunakan String
         this.role = role;
     }
 
@@ -74,11 +74,11 @@ public class LoginResponse {
             this.email = email;
         }
 
-        public String getNomorHp() {  // Ubah nama method
+        public String getNomorHp() {
             return nomor_hp;
         }
 
-        public void setNomorHp(String nomor_hp) {  // Ubah nama method
+        public void setNomorHp(String nomor_hp) {
             this.nomor_hp = nomor_hp;
         }
     }
