@@ -1,7 +1,6 @@
 package com.kalisat.edulearn.Fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import com.kalisat.edulearn.Activity.LoginActivity; // Pastikan import ini sesuai dengan lokasi LoginActivity
+import androidx.appcompat.app.AlertDialog;
+import com.kalisat.edulearn.Activity.LoginActivity;
+import com.kalisat.edulearn.Activity.ThemeActivity;
+import com.kalisat.edulearn.Activity.TentangActivity;
+import com.kalisat.edulearn.Activity.UbahsandiActivity;
 import com.kalisat.edulearn.R;
 
 public class SettingFragment extends Fragment {
@@ -24,11 +25,31 @@ public class SettingFragment extends Fragment {
         // Inflate the layout untuk fragment ini
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        // Cari LinearLayout dengan ID dan tambahkan OnClickListener
+        // Cari LinearLayout dengan ID dan tambahkan OnClickListener untuk logout
         LinearLayout linearLayoutLogout = view.findViewById(R.id.linearLayout_logout); // Pastikan ID sesuai dengan layout XML
         linearLayoutLogout.setOnClickListener(v -> {
             // Tampilkan dialog konfirmasi sebelum logout
             showLogoutConfirmationDialog();
+        });
+
+        // Cari LinearLayout lainnya dan tambahkan OnClickListener untuk membuka Activity
+        LinearLayout tema = view.findViewById(R.id.tema);
+        LinearLayout tentang = view.findViewById(R.id.tentang);
+        LinearLayout ubahSandi = view.findViewById(R.id.ubahsandi); // Pastikan ID ini sesuai dengan layout XML Anda
+
+        tema.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ThemeActivity.class);
+            startActivity(intent);
+        });
+
+        tentang.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), TentangActivity.class);
+            startActivity(intent);
+        });
+
+        ubahSandi.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), UbahsandiActivity.class);
+            startActivity(intent);
         });
 
         return view;

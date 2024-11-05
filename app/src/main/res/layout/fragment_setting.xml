@@ -11,9 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Panel Judul Setting -->
-
-        <!-- Pengaturan Profil -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -36,6 +33,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ubahsandi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -56,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="16dp"
-                android:text="Pengaturan Keamanan"
+                android:text="Ubah Sandi"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -68,38 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
-
-            <ImageView
-                android:id="@+id/icon_notif"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_notif" />
-
-            <TextView
-                android:id="@+id/tv_notiikasi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="16dp"
-                android:text="Notifikasi"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_more"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:id="@+id/tema"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -132,6 +99,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/tentang"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

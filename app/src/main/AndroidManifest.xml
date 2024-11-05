@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,30 +11,51 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EduLearn"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-    tools:targetApi="31">
+        tools:targetApi="31">
+        <activity
+            android:name=".Activity.TentangActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ThemeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.UbahsandiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.KursusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.KelasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.LatSolActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.NilaiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.TugasActivity"
+            android:exported="false" /> <!-- Main Activity with Launcher Intent -->
+        <activity
+            android:name=".Activity.IntroActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <!-- Activities -->
-    <activity android:name=".Activity.KursusActivity" android:exported="false" />
-    <activity android:name=".Activity.LoginActivity" android:exported="false" />
-    <activity android:name=".Activity.KelasActivity" android:exported="false" />
-    <activity android:name=".Activity.LatSolActivity" android:exported="false" />
-    <activity android:name=".Activity.NilaiActivity" android:exported="false" />
-    <activity android:name=".Activity.TugasActivity" android:exported="false" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.MainActivity"
+            android:exported="false" />
+    </application>
 
-    <!-- Main Activity with Launcher Intent -->
-    <activity android:name=".Activity.IntroActivity" android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
-    <activity android:name=".Activity.MainActivity" android:exported="false" />
-</application>
-
-    </manifest>
+</manifest>
