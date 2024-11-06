@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,6 +33,10 @@ public class UbahSandiActivity extends AppCompatActivity {
         edtConfirmPassword = findViewById(R.id.edtconfirmPassword);
 
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        // Setup tombol back
+        ImageView backIcon = findViewById(R.id.back_icon);
+        backIcon.setOnClickListener(v -> finish()); // Menutup Activity saat tombol back diklik
 
         findViewById(R.id.btnkonfirm).setOnClickListener(new View.OnClickListener() {
             @Override
