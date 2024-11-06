@@ -11,4 +11,8 @@
         <item name="itemBackground">@color/white</item>
     </style>
 
+    <style name="CustomAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorAccent">@color/biru_tua</item>
+    </style>
+
 </resources>

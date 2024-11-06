@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.kalisat.edulearn.Activity.LoginActivity;
 import com.kalisat.edulearn.Activity.ThemeActivity;
 import com.kalisat.edulearn.Activity.TentangActivity;
-import com.kalisat.edulearn.Activity.UbahsandiActivity;
+import com.kalisat.edulearn.Activity.UbahSandiActivity;
 import com.kalisat.edulearn.R;
 
 public class SettingFragment extends Fragment {
@@ -48,7 +48,7 @@ public class SettingFragment extends Fragment {
         });
 
         ubahSandi.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), UbahsandiActivity.class);
+            Intent intent = new Intent(requireContext(), UbahSandiActivity.class);
             startActivity(intent);
         });
 
@@ -60,7 +60,6 @@ public class SettingFragment extends Fragment {
         builder.setTitle("Konfirmasi Logout")
                 .setMessage("Apakah Anda yakin ingin keluar?")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    // Proses logout di sini (misalnya, menghapus shared preferences)
                     logoutUser();
 
                     // Pindah ke LoginActivity
@@ -76,7 +75,12 @@ public class SettingFragment extends Fragment {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.biru_tua));
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.biru_tua));
     }
+
+
 
     private void logoutUser() {
         // Hapus status login dari SharedPreferences

@@ -6,12 +6,12 @@
     android:padding="24dp"
     android:background="@android:color/white">
 
-    <!-- Deskripsi Permintaan Kode -->
+
     <TextView
         android:id="@+id/tvInstruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mintalah kode Kursus kepada pengajar,\nlalu masukkan kodenya di sini."
+        android:text="Apakah anda ingin mengganti nomor?"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:layout_marginBottom="16dp" />
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Kode Kursus">
+        android:hint="Masukan Nomor Baru">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etKodeKursus"
@@ -32,18 +32,17 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Instruksi untuk Login Menggunakan Kode Kelas -->
     <TextView
         android:id="@+id/tvLoginInstruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Untuk masuk menggunakan kode kursus"
+        android:text="Perhatian!"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginBottom="8dp" />
 
-    <!-- List Instruksi -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +52,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="• Gunakan akun yang E-Learning"
+            android:text="• Gunakan nomor yang valid untuk\n  mempermudah pemulihan akun dan data diri."
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
@@ -61,18 +60,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="• Gunakan kode kursus yang terdiri atas 6-8\n  huruf atau angka, tanpa spasi atau simbol"
+            android:text="• Pastikan nomor HP baru aktif dan dapat\n  nmenerima SMS."
             android:textColor="@android:color/black"
             android:textSize="14sp" />
     </LinearLayout>
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="jika kamu mengalami masalah dengan kode masuk hubungin pengajar."
-        android:textColor="@android:color/black"
-        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -91,12 +83,12 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btnGabung"
+            android:id="@+id/btnkonfir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:padding="8dp"
-            android:text="Gabung"
+            android:text="Konfirmasi"
             android:textColor="#0071A1"
             android:textStyle="bold" />
     </LinearLayout>

@@ -24,7 +24,7 @@
             android:name=".Activity.ThemeActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.UbahsandiActivity"
+            android:name=".Activity.UbahSandiActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.KursusActivity"
