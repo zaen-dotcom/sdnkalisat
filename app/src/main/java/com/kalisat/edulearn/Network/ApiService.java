@@ -15,7 +15,7 @@ public interface ApiService {
     @POST("login_api.php")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
-    @POST("changepw_api.php") // Pastikan endpoint ini sesuai dengan file yang Anda miliki
+    @POST("changepw_api.php")
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     @POST("get_username_api.php")

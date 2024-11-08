@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
                     String nama = response.body().getUser().getNama();
                     String formattedName = capitalizeEachWord(nama);
-                    welcomeTextView.setText("Halo " + formattedName + "!");
+                    welcomeTextView.setText("Halo, " + formattedName + "!");
                 } else {
                     welcomeTextView.setText("Gagal memuat data pengguna");
                 }
