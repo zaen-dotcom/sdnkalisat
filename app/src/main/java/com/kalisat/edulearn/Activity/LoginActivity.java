@@ -72,11 +72,13 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
                         // Menyimpan informasi pengguna ke SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        SharedPreferences.Editor editor = sharedPreferences.edit(); // Inisialisasi editor di awal
                         editor.putBoolean("isLoggedIn", true);
                         editor.putInt("user_id", response.body().getUser().getId());
                         editor.putString("nama", response.body().getUser().getNama());
                         editor.putString("role", response.body().getRole());
+                        editor.putString("kelas_or_mapel", response.body().getUser().getKelasMapel()); //
+                        editor.putString("nisn_or_nipd", response.body().getUser().getNisnOrNipd());     // Menyimpan NISN/NIPD
                         editor.apply();
 
                         // Menampilkan alert login berhasil
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                         showAlert("Login Gagal: " + (response.body() != null ? response.body().getMessage() : "Kesalahan"));
                     }
                 }
+
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {

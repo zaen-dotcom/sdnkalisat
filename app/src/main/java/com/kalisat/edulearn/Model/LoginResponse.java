@@ -10,7 +10,7 @@ public class LoginResponse {
     @SerializedName("user")
     private User user;
 
-    // Getter dan Setter
+    // Getter dan Setter untuk LoginResponse
     public boolean isStatus() {
         return status;
     }
@@ -27,11 +27,11 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public String getRole() {  // Getter role menggunakan String
+    public String getRole() {
         return role;
     }
 
-    public void setRole(String role) {  // Setter role menggunakan String
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -43,13 +43,19 @@ public class LoginResponse {
         this.user = user;
     }
 
+    // Inner class untuk User
     public static class User {
         private int id;
         private String nama;
         private String email;
-        private String nomor_hp;
+        @SerializedName("nomor_hp")
+        private String nomorHp; // Sesuaikan nama dengan API
+        @SerializedName("kelas_mapel")
+        private String kelasMapel; // Untuk guru atau siswa
+        @SerializedName("nisn_nipd")
+        private String nisnOrNipd; // NISN untuk siswa atau NIPD untuk guru
 
-        // Getter dan Setter
+        // Getter dan Setter untuk User
         public int getId() {
             return id;
         }
@@ -75,11 +81,27 @@ public class LoginResponse {
         }
 
         public String getNomorHp() {
-            return nomor_hp;
+            return nomorHp;
         }
 
-        public void setNomorHp(String nomor_hp) {
-            this.nomor_hp = nomor_hp;
+        public void setNomorHp(String nomorHp) {
+            this.nomorHp = nomorHp;
+        }
+
+        public String getKelasMapel() {
+            return kelasMapel;
+        }
+
+        public void setKelasMapel(String kelasMapel) {
+            this.kelasMapel = kelasMapel;
+        }
+
+        public String getNisnOrNipd() {
+            return nisnOrNipd;
+        }
+
+        public void setNisnOrNipd(String nisnOrNipd) {
+            this.nisnOrNipd = nisnOrNipd;
         }
     }
 }
