@@ -81,12 +81,12 @@
 
             <!-- Input Email -->
             <EditText
-                android:id="@+id/etEmail"
+                android:id="@+id/etIdentitas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@android:color/darker_gray"
-                android:hint="Email, Nomor, NISN"
+                android:hint="NISN"
                 android:inputType="textEmailAddress"
                 android:padding="12dp"
                 android:textColor="@android:color/black" />

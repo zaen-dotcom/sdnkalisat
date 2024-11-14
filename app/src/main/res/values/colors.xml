@@ -4,5 +4,17 @@
     <color name="white">#FFFFFFFF</color>
     <color name="darker_gray">#31363F</color>
     <color name="biru_tua">#0071A1</color>
-    <color name="Biru_muda">#CFF1FF</color>
+    <color name="biru_muda">#CFF1FF</color>
+
+
+    <color name="coral">#FF6F61</color>
+    <color name="sky_blue">#6FA8DC</color>
+    <color name="light_green">#8BC34A</color>
+    <color name="bright_yellow">#FFEB3B</color>
+    <color name="amber">#FFC107</color>
+    <color name="vibrant_pink">#FF4081</color>
+    <color name="purple">#9C27B0</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="orange">#FF9800</color>
+    <color name="green">#4CAF50</color>
 </resources>

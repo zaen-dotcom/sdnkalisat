@@ -4,15 +4,12 @@
         android:icon="@drawable/bottom_home"
         android:title="Home" />
     <item
-        android:id="@+id/navigation_notif"
-        android:icon="@drawable/bottom_notif"
-        android:title="Notifikasi" />
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_kelas"
+        android:title="Kelas" />
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/bottom_profil"
         android:title="Profile" />
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/bottom_setting"
-        android:title="Settings" />
+
 </menu>

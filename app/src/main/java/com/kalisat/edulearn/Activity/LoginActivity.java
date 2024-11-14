@@ -1,124 +1,93 @@
 package com.kalisat.edulearn.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.kalisat.edulearn.R;
-import com.kalisat.edulearn.Model.LoginRequest;
-import com.kalisat.edulearn.Model.LoginResponse;
-import com.kalisat.edulearn.Network.ApiClient;
-import com.kalisat.edulearn.Network.ApiService;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private EditText etIdentitas, etPassword;
+    private Button btnSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Mengecek apakah pengguna sudah login sebelumnya
-        SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-        if (isLoggedIn) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
-        // Inisialisasi komponen UI
-        EditText etEmail = findViewById(R.id.etEmail);
-        EditText etPassword = findViewById(R.id.etPassword);
-        Button btnSignIn = findViewById(R.id.btnSignIn);
-
-        // Inisialisasi ApiService
-        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+        etIdentitas = findViewById(R.id.etIdentitas);
+        etPassword = findViewById(R.id.etPassword);
+        btnSignIn = findViewById(R.id.btnSignIn);
 
         btnSignIn.setOnClickListener(v -> {
-            String email = etEmail.getText().toString().trim();
+            String nisn = etIdentitas.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            if (email.isEmpty()) {
-                showAlert("Email harus diisi");
-                etEmail.requestFocus();
-                return;
+            if (nisn.isEmpty() || password.isEmpty()) {
+                showAlert("Peringatan", "NISN dan Password tidak boleh kosong!");
+            } else {
+                login(nisn, password);
             }
-
-            if (password.isEmpty()) {
-                showAlert("Password harus diisi");
-                etPassword.requestFocus();
-                return;
-            }
-
-            // Membuat objek LoginRequest dan memanggil API login
-            LoginRequest loginRequest = new LoginRequest(email, password);
-            Call<LoginResponse> call = apiService.login(loginRequest);
-            call.enqueue(new Callback<LoginResponse>() {
-                @Override
-                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    if (response.isSuccessful() && response.body() != null && response.body().isStatus()) {
-                        // Menyimpan informasi pengguna ke SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit(); // Inisialisasi editor di awal
-                        editor.putBoolean("isLoggedIn", true);
-                        editor.putInt("user_id", response.body().getUser().getId());
-                        editor.putString("nama", response.body().getUser().getNama());
-                        editor.putString("role", response.body().getRole());
-                        editor.putString("kelas_or_mapel", response.body().getUser().getKelasMapel()); //
-                        editor.putString("nisn_or_nipd", response.body().getUser().getNisnOrNipd());     // Menyimpan NISN/NIPD
-                        editor.apply();
-
-                        // Menampilkan alert login berhasil
-                        showAlert("Login Berhasil sebagai " + response.body().getRole(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    } else {
-                        // Menampilkan pesan jika login gagal
-                        showAlert("Login Gagal: " + (response.body() != null ? response.body().getMessage() : "Kesalahan"));
-                    }
-                }
-
-
-                @Override
-                public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    showAlert("Gagal: " + t.getMessage());
-                    Log.e("LoginActivity", "Failure: ", t);
-                }
-            });
         });
     }
 
-    // Menampilkan AlertDialog dengan pesan sederhana
-    private void showAlert(String message) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show();
+    private void login(String nisn, String password) {
+        String url = "http://192.168.159.228:8000/api/login";
+
+        JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("nisn", nisn);
+            requestBody.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
+                response -> {
+                    try {
+                        String status = response.getString("status");
+                        if (status.equals("success")) {
+                            String token = response.getJSONObject("data").getString("token");
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE);
+                            sharedPreferences.edit().putString("user_token", token).apply();
+
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("user_token", token);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            showAlert("Login Gagal", response.getString("message"));
+                        }
+                    } catch (JSONException e) {
+                        showAlert("Kesalahan", "Kesalahan parsing data!");
+                    }
+                },
+                error -> showAlert("Kesalahan", "Gagal terhubung ke server!"));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
     }
 
-    // Overloaded showAlert dengan listener untuk menangani tindakan OK
-    private void showAlert(String message, DialogInterface.OnClickListener listener) {
+    private void showAlert(String title, String message) {
         new AlertDialog.Builder(this)
+                .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("OK", listener)
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 }
