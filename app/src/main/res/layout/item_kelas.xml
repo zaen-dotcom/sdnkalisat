@@ -41,7 +41,7 @@ android:background="@color/biru_muda">
     app:layout_constraintTop_toTopOf="parent" />
 
 <TextView
-    android:id="@+id/tv_tanggal"
+    android:id="@+id/tv_namaguru"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"

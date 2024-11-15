@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_tugas"
+        android:icon="@drawable/ic_tugas"
+        android:title="Tugas" />
+    <item
+        android:id="@+id/navigation_latihan"
+        android:icon="@drawable/ic_latsol"
+        android:title="Latihan Soal" />
+</menu>

@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,9 +81,9 @@
                 android:id="@+id/icon_nis"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_infoout"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_infoout" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -234,7 +234,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
