@@ -27,7 +27,7 @@ public class TugasFragment extends Fragment {
         // Menampilkan nama mata pelajaran di TextView
         TextView tvMapelTitle = view.findViewById(R.id.tv_mapel_title);
         if (mapelName != null) {
-            tvMapelTitle.setText("Mata Pelajaran: " + mapelName);
+            tvMapelTitle.setText(mapelName);
         }
 
         // Anda dapat menambahkan logika untuk mengambil data tugas di sini

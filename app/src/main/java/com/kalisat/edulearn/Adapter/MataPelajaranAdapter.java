@@ -43,15 +43,25 @@ public class MataPelajaranAdapter extends RecyclerView.Adapter<MataPelajaranAdap
         holder.tvJudulMapel.setText(mataPelajaran.getNamaMapel());
         holder.tvNamaGuru.setText(mataPelajaran.getNamaGuru());
 
-        // Set OnClickListener pada item untuk membuka DetailMapelActivity
+        // Klik pada itemView (item secara keseluruhan)
         holder.itemView.setOnClickListener(v -> {
-            // Kirim data id_mapel dan nama_mapel ke DetailMapelActivity
+            // Kirim data ke DetailMapelActivity
             Intent intent = new Intent(context, DetailMapelActivity.class);
-            intent.putExtra("id_mapel", mataPelajaran.getId());  // Mengirim ID mata pelajaran
-            intent.putExtra("nama_mapel", mataPelajaran.getNamaMapel());  // Mengirim nama mata pelajaran
-            context.startActivity(intent); // Memulai activity baru
+            intent.putExtra("id_mapel", mataPelajaran.getId());
+            intent.putExtra("nama_mapel", mataPelajaran.getNamaMapel());
+            context.startActivity(intent);
+        });
+
+        // Klik pada Button "Masuk Kelas"
+        holder.btnMasukKelas.setOnClickListener(v -> {
+            // Kirim data ke DetailMapelActivity
+            Intent intent = new Intent(context, DetailMapelActivity.class);
+            intent.putExtra("id_mapel", mataPelajaran.getId());
+            intent.putExtra("nama_mapel", mataPelajaran.getNamaMapel());
+            context.startActivity(intent);
         });
     }
+
 
 
     @Override

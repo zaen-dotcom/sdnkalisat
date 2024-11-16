@@ -139,7 +139,7 @@ public class KelasFragment extends Fragment {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);  // Menambahkan token ke header Authorization
+                headers.put("Authorization", "Bearer " + token);
                 headers.put("Accept", "application/json");
                 return headers;
             }

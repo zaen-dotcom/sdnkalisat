@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         // Ambil token dari Intent
         userToken = getIntent().getStringExtra("user_token");
 
+        // Jika token kosong, arahkan ke LoginActivity
         if (userToken == null || userToken.isEmpty()) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -52,14 +53,15 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.navigation_home) {
                 // Hapus semua fragment dari backstack saat kembali ke Home
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                // Tidak perlu melanjutkan fragment swap jika di Home
+                // Tidak ada fragment yang diganti karena Home adalah MainActivity
                 return true;
             }
 
+            // Ganti fragment jika fragment dipilih
             if (selectedFragment != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, selectedFragment);
-                transaction.addToBackStack(null); // Tambahkan ke backstack untuk navigasi balik
+                transaction.addToBackStack(null); // Tambahkan ke backstack
                 transaction.commit();
             }
 
@@ -91,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (currentFragment instanceof KelasFragment) {
                 bottomNavigationView.setSelectedItemId(R.id.navigation_settings);
             } else {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_home); // Set ke Home jika sudah tidak ada backstack
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home); // Kembali ke Home
             }
         } else {
-            // Jika sudah di root (Home), keluar dari aplikasi
+            // Jika sudah di Home, keluar dari aplikasi
             super.onBackPressed();
         }
     }
