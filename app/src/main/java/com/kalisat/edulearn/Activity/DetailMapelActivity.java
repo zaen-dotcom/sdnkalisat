@@ -30,7 +30,7 @@ public class DetailMapelActivity extends AppCompatActivity {
         // Cek apakah ID valid
         if (idMapel != -1 && namaMapel != null) {
             // Set default fragment (TugasFragment)
-            loadFragment(new TugasFragment(idMapel, namaMapel));
+            loadFragment(TugasFragment.newInstance(idMapel, namaMapel));
         } else {
             Toast.makeText(this, "ID atau Nama Mata Pelajaran Tidak Valid", Toast.LENGTH_SHORT).show();
         }
@@ -40,16 +40,18 @@ public class DetailMapelActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
+            // Pilih fragment berdasarkan tab yang dipilih
             if (item.getItemId() == R.id.navigation_tugas) {
-                selectedFragment = new TugasFragment(idMapel, namaMapel);
+                selectedFragment = TugasFragment.newInstance(idMapel, namaMapel);
             } else if (item.getItemId() == R.id.navigation_latihan) {
-                selectedFragment = new LatsolFragment(idMapel);
+                selectedFragment = LatsolFragment.newInstance(idMapel);
             }
 
             return loadFragment(selectedFragment);
         });
     }
 
+    // Fungsi untuk memuat fragment
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()

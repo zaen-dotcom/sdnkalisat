@@ -9,6 +9,8 @@
 
     <style name="BottomNavTheme" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemBackground">@color/white</item>
+        <item name="elevation">0dp</item>
+        <item name="backgroundTint">@color/white</item>
     </style>
 
     <style name="CustomAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">

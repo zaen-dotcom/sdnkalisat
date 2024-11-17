@@ -19,6 +19,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.DetailJadwalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.DetailTugasActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.DetailMapelActivity"
             android:exported="false" />
         <activity

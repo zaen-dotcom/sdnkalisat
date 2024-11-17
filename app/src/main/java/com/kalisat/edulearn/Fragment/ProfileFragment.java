@@ -107,17 +107,17 @@ public class ProfileFragment extends Fragment {
                             tvkelas.setText(kelas);
                             tv_nomor.setText(nomor_hp);
                         } else {
-                            // Tampilkan alert dan arahkan ke IntroActivity setelah menekan OK
+                            // Tampilkan alert jika token tidak valid
                             showInvalidTokenAlert();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showAlert("Kesalahan", "Kesalahan parsing data!");
+                        showInvalidTokenAlert();
                     }
                 },
                 error -> {
                     error.printStackTrace();
-                    showAlert("Kesalahan", "Gagal terhubung ke server!");
+                    showInvalidTokenAlert();
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -131,6 +131,7 @@ public class ProfileFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(requireContext());
         queue.add(request);
     }
+
 
     private void openUbahSandiActivity() {
         Intent intent = new Intent(getActivity(), UbahSandiActivity.class);

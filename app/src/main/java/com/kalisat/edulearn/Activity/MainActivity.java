@@ -10,13 +10,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kalisat.edulearn.Fragment.HomeFragment;
 import com.kalisat.edulearn.Fragment.ProfileFragment;
 import com.kalisat.edulearn.Fragment.KelasFragment;
 import com.kalisat.edulearn.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String userToken; // Token user untuk autentikasi
+    private String userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,68 +37,55 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        // Tambahkan HomeFragment sebagai default fragment
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = new HomeFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("user_token", userToken);
+            homeFragment.setArguments(bundle);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, homeFragment);
+            transaction.commit();
+        }
+
         setupBottomNavigation();
-        setupListeners();
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
-            if (item.getItemId() == R.id.navigation_profile) {
+            if (item.getItemId() == R.id.navigation_home) {
+                // Muat ulang HomeFragment
+                selectedFragment = new HomeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("user_token", userToken);
+                selectedFragment.setArguments(bundle);
+            } else if (item.getItemId() == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
             } else if (item.getItemId() == R.id.navigation_settings) {
                 selectedFragment = new KelasFragment();
-            } else if (item.getItemId() == R.id.navigation_home) {
-                // Hapus semua fragment dari backstack saat kembali ke Home
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                // Tidak ada fragment yang diganti karena Home adalah MainActivity
-                return true;
             }
 
             // Ganti fragment jika fragment dipilih
             if (selectedFragment != null) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, selectedFragment);
-                transaction.addToBackStack(null); // Tambahkan ke backstack
-                transaction.commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
             }
 
             return true;
         });
     }
 
-    private void setupListeners() {
-        // Listener untuk foto profil
-        ImageView fotoProfil = findViewById(R.id.profile_image);
-        fotoProfil.setOnClickListener(v -> {
-            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+    public void navigateToProfile() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate(); // Kembali ke fragment sebelumnya di stack
-            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
-
-            // Atur BottomNavigationView agar sesuai dengan fragment aktif
-            if (currentFragment instanceof ProfileFragment) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
-            } else if (currentFragment instanceof KelasFragment) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_settings);
-            } else {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_home); // Kembali ke Home
-            }
-        } else {
-            // Jika sudah di Home, keluar dari aplikasi
-            super.onBackPressed();
-        }
+        bottomNavigationView.setSelectedItemId(R.id.navigation_profile); // Set bottom navigation ke profile
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ProfileFragment())
+                .addToBackStack(null) // Tambahkan ke backstack
+                .commit();
     }
 }

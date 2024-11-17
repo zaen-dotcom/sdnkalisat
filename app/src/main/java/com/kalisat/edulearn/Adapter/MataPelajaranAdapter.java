@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kalisat.edulearn.Activity.DetailMapelActivity;
@@ -24,6 +22,19 @@ public class MataPelajaranAdapter extends RecyclerView.Adapter<MataPelajaranAdap
     private List<MataPelajaran> mataPelajaranList;
     private Context context;
 
+    // Array warna untuk background, looping setelah 10 item
+    private final int[] colors = {
+            R.color.soft_coral,
+            R.color.soft_sky_blue,
+            R.color.soft_light_green,
+            R.color.soft_bright_yellow,
+            R.color.soft_purple,
+            R.color.soft_cyan,
+            R.color.soft_orange,
+            R.color.soft_green
+    };
+
+    // Constructor
     public MataPelajaranAdapter(Context context, List<MataPelajaran> mataPelajaranList) {
         this.context = context;
         this.mataPelajaranList = mataPelajaranList;
@@ -40,47 +51,52 @@ public class MataPelajaranAdapter extends RecyclerView.Adapter<MataPelajaranAdap
     public void onBindViewHolder(@NonNull MataPelajaranViewHolder holder, int position) {
         MataPelajaran mataPelajaran = mataPelajaranList.get(position);
 
+        // Atur data ke view
         holder.tvJudulMapel.setText(mataPelajaran.getNamaMapel());
         holder.tvNamaGuru.setText(mataPelajaran.getNamaGuru());
 
-        // Klik pada itemView (item secara keseluruhan)
+        // Tentukan warna background berdasarkan posisi (loop kembali ke awal setelah 10 item)
+        int colorIndex = position % colors.length; // Ambil indeks warna berdasarkan posisi
+        int backgroundColor = context.getResources().getColor(colors[colorIndex]);
+
+        // Terapkan warna ke background `ConstraintLayout`
+        holder.bgWarna.setBackgroundColor(backgroundColor);
+
+        // Klik pada item untuk membuka DetailMapelActivity
         holder.itemView.setOnClickListener(v -> {
-            // Kirim data ke DetailMapelActivity
             Intent intent = new Intent(context, DetailMapelActivity.class);
             intent.putExtra("id_mapel", mataPelajaran.getId());
             intent.putExtra("nama_mapel", mataPelajaran.getNamaMapel());
+            intent.putExtra("nama_guru", mataPelajaran.getNamaGuru());
             context.startActivity(intent);
         });
 
-        // Klik pada Button "Masuk Kelas"
+        // Klik pada tombol "Masuk Kelas" untuk membuka DetailMapelActivity
         holder.btnMasukKelas.setOnClickListener(v -> {
-            // Kirim data ke DetailMapelActivity
             Intent intent = new Intent(context, DetailMapelActivity.class);
             intent.putExtra("id_mapel", mataPelajaran.getId());
             intent.putExtra("nama_mapel", mataPelajaran.getNamaMapel());
+            intent.putExtra("nama_guru", mataPelajaran.getNamaGuru());
             context.startActivity(intent);
         });
     }
-
-
 
     @Override
     public int getItemCount() {
         return mataPelajaranList.size();
     }
 
-    public class MataPelajaranViewHolder extends RecyclerView.ViewHolder {
+    public static class MataPelajaranViewHolder extends RecyclerView.ViewHolder {
         TextView tvJudulMapel, tvNamaGuru;
-        Button btnMasukKelas;
-        ImageView imageViewBackground;
+        View bgWarna;
+        Button btnMasukKelas; // Tambahkan referensi ke tombol
 
         public MataPelajaranViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Pastikan id sesuai dengan yang ada di item_kelas.xml
             tvJudulMapel = itemView.findViewById(R.id.tv_judul_mapel);
             tvNamaGuru = itemView.findViewById(R.id.tv_namaguru);
-            btnMasukKelas = itemView.findViewById(R.id.btn_masukkelas);
-            imageViewBackground = itemView.findViewById(R.id.imageView10);
+            bgWarna = itemView.findViewById(R.id.bg_warna);
+            btnMasukKelas = itemView.findViewById(R.id.btn_masukkelas); // Inisialisasi tombol
         }
     }
 }

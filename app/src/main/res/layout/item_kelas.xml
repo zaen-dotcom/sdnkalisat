@@ -11,7 +11,7 @@
     app:cardCornerRadius="12dp">
 
 <androidx.constraintlayout.widget.ConstraintLayout
-android:id="@+id/linearLayout"
+android:id="@+id/bg_warna"
 android:layout_width="match_parent"
 android:layout_height="125dp"
 android:background="@color/biru_muda">
