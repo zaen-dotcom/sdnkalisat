@@ -166,7 +166,7 @@ public class KelasFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));
 
-        // Tambahkan request ke RequestQueue
+        // Tambahkan request ke RequestQueue.
         requestQueue.add(jsonObjectRequest);
     }
 }
