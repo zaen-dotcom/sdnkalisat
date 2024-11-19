@@ -10,7 +10,7 @@
         android:layout_height="250dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/biru_muda"
         app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,6 @@
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/btn_background_1"
             android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout

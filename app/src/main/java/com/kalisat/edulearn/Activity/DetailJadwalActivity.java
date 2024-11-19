@@ -116,11 +116,12 @@ public class DetailJadwalActivity extends AppCompatActivity {
 
                                 // Set adapter ke RecyclerView
                                 if (recyclerView.getAdapter() == null) {
-                                    jadwalAdapter = new JadwalAdapterGrouped(jadwalGroupedList);
+                                    jadwalAdapter = new JadwalAdapterGrouped(DetailJadwalActivity.this, jadwalGroupedList); // Gunakan DetailJadwalActivity.this
                                     recyclerView.setAdapter(jadwalAdapter);
                                 } else {
                                     recyclerView.getAdapter().notifyDataSetChanged();
                                 }
+
                             } else {
                                 Log.e("API_Response", "Respons tidak valid.");
                             }

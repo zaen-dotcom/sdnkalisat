@@ -1,11 +1,13 @@
 package com.kalisat.edulearn.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kalisat.edulearn.Model.ModelJadwalDetail;
@@ -16,9 +18,11 @@ import java.util.List;
 
 public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrouped.ViewHolder> {
 
+    private Context context;
     private List<ModelJadwalGrouped> jadwalGroupedList;
 
-    public JadwalAdapterGrouped(List<ModelJadwalGrouped> jadwalGroupedList) {
+    public JadwalAdapterGrouped(Context context, List<ModelJadwalGrouped> jadwalGroupedList) {
+        this.context = context;
         this.jadwalGroupedList = jadwalGroupedList;
     }
 
@@ -63,6 +67,21 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
             holder.tvMapel3.setText("-");
             holder.tvStartEnd3.setText("-");
         }
+
+        // Atur warna background CardView
+        int colorIndex = position % 8; // Pilih warna secara berulang
+        int[] colors = {
+                R.color.soft_coral,
+                R.color.biru_muda,
+                R.color.soft_light_green,
+                R.color.soft_bright_yellow,
+                R.color.soft_purple,
+                R.color.soft_cyan,
+                R.color.soft_orange,
+                R.color.soft_green
+        };
+        int backgroundColor = context.getResources().getColor(colors[colorIndex]);
+        holder.cardView.setCardBackgroundColor(backgroundColor);
     }
 
     @Override
@@ -72,6 +91,7 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvHari, tvMapel1, tvStartEnd1, tvMapel2, tvStartEnd2, tvMapel3, tvStartEnd3;
+        CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +103,7 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
             tvStartEnd2 = itemView.findViewById(R.id.tv_startend2);
             tvMapel3 = itemView.findViewById(R.id.tv_mapel3);
             tvStartEnd3 = itemView.findViewById(R.id.tv_startend3);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }
