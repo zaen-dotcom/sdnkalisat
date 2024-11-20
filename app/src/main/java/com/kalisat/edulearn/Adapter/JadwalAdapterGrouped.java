@@ -69,7 +69,7 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
         }
 
         // Atur warna background CardView
-        int colorIndex = position % 8; // Pilih warna secara berulang
+        int colorIndex = position % 8;
         int[] colors = {
                 R.color.soft_coral,
                 R.color.biru_muda,
