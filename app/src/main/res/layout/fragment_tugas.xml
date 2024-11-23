@@ -7,27 +7,41 @@
     tools:context=".Fragment.TugasFragment">
 
     <!-- Panel Header -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/panel_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="16dp"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ic_kembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back2" />
 
         <TextView
             android:id="@+id/tv_mapel_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mata Pelajaran"
-            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"
+            android:text="Semua jadwal"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ic_kembali"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- TextView Tidak Ada Tugas -->
     <TextView

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,8 @@ public class TugasFragment extends Fragment {
     private TugasAdapter adapter;
     private List<ModelTugas> tugasList;
     private RequestQueue requestQueue;
-    private TextView tvNoData, tvMapelTitle; // Tambahkan tvMapelTitle
+    private TextView tvNoData, tvMapelTitle;
+    private ImageView icKembali; // Tambahkan variabel untuk ikon kembali
     private int idMapel;
     private String namaMapel;
 
@@ -85,6 +87,17 @@ public class TugasFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         tvNoData = view.findViewById(R.id.tv_no_data);
+
+        // Inisialisasi ImageView untuk ikon kembali
+        icKembali = view.findViewById(R.id.ic_kembali);
+        icKembali.setOnClickListener(v -> {
+            // Tindakan saat ikon kembali diklik
+            if (getActivity() != null) {
+                getActivity().onBackPressed(); // Kembali ke fragment sebelumnya
+            } else {
+                Toast.makeText(getContext(), "Tidak dapat kembali", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Inisialisasi list data dan adapter
         tugasList = new ArrayList<>();

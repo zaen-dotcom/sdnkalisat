@@ -77,7 +77,7 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
                 R.color.soft_bright_yellow,
                 R.color.soft_purple,
                 R.color.soft_cyan,
-                R.color.soft_orange,
+                R.color.soft_red,
                 R.color.soft_green
         };
         int backgroundColor = context.getResources().getColor(colors[colorIndex]);

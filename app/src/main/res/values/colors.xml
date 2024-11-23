@@ -6,6 +6,11 @@
     <color name="biru_tua">#0071A1</color>
     <color name="biru_muda">#4CC9FE</color>
     <color name="abu">#DBD3D3</color>
+    <color name="blue_button">#0967BE</color>
+    <color name="cyan_button">#00959C</color>
+    <color name="orange_button">#F69105</color>
+    <color name="pink_button">#E8376E</color>
+
 
 
     <color name="soft_coral">#FFB8A7</color>
@@ -18,4 +23,6 @@
     <color name="soft_cyan">#B2EBF2</color>
     <color name="soft_orange">#FFCCBC</color>
     <color name="soft_green">#A5D6A7</color>
+    <color name="soft_red">#FFCDD2</color>
+
 </resources>
