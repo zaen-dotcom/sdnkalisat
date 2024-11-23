@@ -8,6 +8,7 @@ public class ModelSoal {
     private String pilihanC;
     private String pilihanD;
     private String jawaban;
+    private String selectedAnswer; // Tambahan untuk menyimpan jawaban user
 
     public ModelSoal(int id, String soal, String pilihanA, String pilihanB, String pilihanC, String pilihanD, String jawaban) {
         this.id = id;
@@ -17,6 +18,7 @@ public class ModelSoal {
         this.pilihanC = pilihanC;
         this.pilihanD = pilihanD;
         this.jawaban = jawaban;
+        this.selectedAnswer = null; // Default: belum ada jawaban
     }
 
     public int getId() {
@@ -45,5 +47,13 @@ public class ModelSoal {
 
     public String getJawaban() {
         return jawaban;
+    }
+
+    public String getSelectedAnswer() {
+        return selectedAnswer;
+    }
+
+    public void setSelectedAnswer(String selectedAnswer) {
+        this.selectedAnswer = selectedAnswer;
     }
 }

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -38,7 +39,7 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
     private int idLatihanSoal;
     private String bearerToken;
     private ImageView icNextPage, icBackPage;
-    private Button btnSelesai; // Tambahkan tombol selesai
+    private Button btnSelesai; // Tombol selesai
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,6 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
         // Tombol selesai disembunyikan di awal
         btnSelesai.setVisibility(View.GONE);
 
-        // Log untuk memeriksa apakah elemen-elemen navigasi terinisialisasi dengan benar
-        Log.d("UI Check", "icNextPage: " + icNextPage + " icBackPage: " + icBackPage);
-
         // Ambil ID latihan soal dari Intent
         idLatihanSoal = getIntent().getIntExtra("id_latihan_soal", -1);
 
@@ -75,9 +73,6 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
             Toast.makeText(this, "ID soal atau token tidak ditemukan.", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        // Log untuk memeriksa apakah idLatihanSoal dan bearerToken sudah benar
-        Log.d("UI Check", "idLatihanSoal: " + idLatihanSoal + " bearerToken: " + bearerToken);
     }
 
     private void getLatihanSoal(int page) {
@@ -146,9 +141,6 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
         adapter = new LatihanSoalPagerAdapter(soalList);
         viewPagerSoal.setAdapter(adapter);
 
-        // Log untuk memeriksa apakah adapter telah di-set
-        Log.d("UI Check", "Adapter set to ViewPager2");
-
         // Navigasi Next page
         icNextPage.setOnClickListener(v -> {
             if (viewPagerSoal.getCurrentItem() < soalList.size() - 1) {
@@ -163,28 +155,95 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
             }
         });
 
-        // Tambahkan listener untuk mendeteksi perubahan halaman
+        // Listener untuk perubahan halaman
         viewPagerSoal.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
                 if (position == soalList.size() - 1) {
-                    // Halaman terakhir, sembunyikan tombol next dan tampilkan tombol selesai
                     icNextPage.setVisibility(View.GONE);
                     btnSelesai.setVisibility(View.VISIBLE);
                 } else {
-                    // Bukan halaman terakhir, tampilkan tombol next dan sembunyikan tombol selesai
                     icNextPage.setVisibility(View.VISIBLE);
                     btnSelesai.setVisibility(View.GONE);
                 }
             }
         });
 
-        // Tambahkan aksi untuk tombol selesai
+        // Aksi tombol selesai
         btnSelesai.setOnClickListener(v -> {
-            Toast.makeText(ProsesLatihanSoalActivity.this, "Latihan selesai!", Toast.LENGTH_SHORT).show();
-            finish(); // Akhiri aktivitas atau navigasikan ke halaman lain
+            // Validasi apakah semua soal telah dijawab
+            boolean allAnswered = true;
+            for (ModelSoal soal : soalList) {
+                if (soal.getSelectedAnswer() == null) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (allAnswered) {
+                showConfirmationDialog();
+            } else {
+                Toast.makeText(this, "Harap jawab semua soal sebelum mengirim.", Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    private void showConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Selesai")
+                .setMessage("Kirim untuk menyelesaikan latihan soal..")
+                .setPositiveButton("Kirim", (dialog, which) -> {
+                    submitAnswersToServer();
+                })
+                .setNegativeButton("Batal", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void submitAnswersToServer() {
+        String url = "http://192.168.159.228:8000/api/submit-latihan-soal";
+
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("id_siswa", 1); // Ganti sesuai ID siswa
+            JSONArray answersArray = new JSONArray();
+
+            for (ModelSoal soal : soalList) {
+                if (soal.getSelectedAnswer() != null) {
+                    JSONObject answerObject = new JSONObject();
+                    answerObject.put("id_latihan_soal", soal.getId());
+                    answerObject.put("jawaban", soal.getSelectedAnswer());
+                    answersArray.put(answerObject);
+                }
+            }
+
+            payload.put("answer", answersArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Kesalahan saat mempersiapkan data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, payload,
+                response -> {
+                    Toast.makeText(this, "Jawaban berhasil dikirim!", Toast.LENGTH_SHORT).show();
+                    finish();
+                },
+                error -> {
+                    Toast.makeText(this, "Gagal mengirim jawaban. Periksa koneksi Anda.", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + bearerToken);
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(request);
     }
 }

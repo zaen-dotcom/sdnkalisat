@@ -32,31 +32,45 @@ public class LatihanSoalPagerAdapter extends RecyclerView.Adapter<LatihanSoalPag
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ModelSoal soal = soalList.get(position);
 
-        // Set data ke TextView sesuai data soal
+        // Set data soal dan pilihan jawaban
         holder.tvSoal.setText(soal.getSoal());
         holder.tvAnswer1.setText(soal.getPilihanA());
         holder.tvAnswer2.setText(soal.getPilihanB());
         holder.tvAnswer3.setText(soal.getPilihanC());
         holder.tvAnswer4.setText(soal.getPilihanD());
 
-        // Tambahkan click listener untuk setiap jawaban (opsional)
-        holder.tvAnswer1.setOnClickListener(v -> {
-            // Tindakan ketika jawaban 1 diklik
-        });
-        holder.tvAnswer2.setOnClickListener(v -> {
-            // Tindakan ketika jawaban 2 diklik
-        });
-        holder.tvAnswer3.setOnClickListener(v -> {
-            // Tindakan ketika jawaban 3 diklik
-        });
-        holder.tvAnswer4.setOnClickListener(v -> {
-            // Tindakan ketika jawaban 4 diklik
-        });
+        // Update tampilan centang berdasarkan jawaban yang dipilih
+        updateAnswerSelection(holder, soal);
+
+        // Tambahkan listener untuk setiap jawaban
+        holder.tvAnswer1.setOnClickListener(v -> handleAnswerSelection(holder, soal, "a"));
+        holder.tvAnswer2.setOnClickListener(v -> handleAnswerSelection(holder, soal, "b"));
+        holder.tvAnswer3.setOnClickListener(v -> handleAnswerSelection(holder, soal, "c"));
+        holder.tvAnswer4.setOnClickListener(v -> handleAnswerSelection(holder, soal, "d"));
     }
 
     @Override
     public int getItemCount() {
         return soalList.size();
+    }
+
+    // Menangani pilihan jawaban
+    private void handleAnswerSelection(ViewHolder holder, ModelSoal soal, String answer) {
+        soal.setSelectedAnswer(answer); // Simpan jawaban yang dipilih
+        updateAnswerSelection(holder, soal); // Perbarui tampilan centang
+    }
+
+    // Memperbarui tampilan centang
+    private void updateAnswerSelection(ViewHolder holder, ModelSoal soal) {
+        // Tampilkan centang pada jawaban yang dipilih
+        holder.tvAnswer1.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                "a".equals(soal.getSelectedAnswer()) ? R.drawable.ic_check : 0, 0);
+        holder.tvAnswer2.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                "b".equals(soal.getSelectedAnswer()) ? R.drawable.ic_check : 0, 0);
+        holder.tvAnswer3.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                "c".equals(soal.getSelectedAnswer()) ? R.drawable.ic_check : 0, 0);
+        holder.tvAnswer4.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                "d".equals(soal.getSelectedAnswer()) ? R.drawable.ic_check : 0, 0);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
