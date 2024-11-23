@@ -1,6 +1,7 @@
 package com.kalisat.edulearn.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -73,6 +75,15 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
             Toast.makeText(this, "ID soal atau token tidak ditemukan.", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        // Tangani tombol back agar dinonaktifkan
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Tampilkan pesan jika tombol back ditekan
+                Toast.makeText(ProsesLatihanSoalActivity.this, "Kembali tidak diizinkan saat mengerjakan soal.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getLatihanSoal(int page) {
@@ -185,28 +196,72 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
             if (allAnswered) {
                 showConfirmationDialog();
             } else {
-                Toast.makeText(this, "Harap jawab semua soal sebelum mengirim.", Toast.LENGTH_SHORT).show();
+                showIncompleteAnswersDialog(); // Panggil dialog custom untuk validasi jawaban
             }
         });
     }
 
-    private void showConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Konfirmasi Selesai")
-                .setMessage("Kirim untuk menyelesaikan latihan soal..")
-                .setPositiveButton("Kirim", (dialog, which) -> {
-                    submitAnswersToServer();
-                })
-                .setNegativeButton("Batal", (dialog, which) -> dialog.dismiss())
-                .show();
+    private void showIncompleteAnswersDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Peringatan");
+        builder.setMessage("Harap jawab semua soal sebelum mengirim.");
+
+        // Tombol OK untuk menutup dialog
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+        // Buat dialog non-cancellable
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false); // Mencegah dialog ditutup dengan tombol back
+        dialog.setCanceledOnTouchOutside(false); // Mencegah ditutup dengan menyentuh luar dialog
+
+        // Tampilkan dialog terlebih dahulu
+        dialog.show();
+
+        // Ubah warna tombol setelah dialog ditampilkan
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));
     }
+
+
+    private void showConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Konfirmasi Selesai");
+        builder.setMessage("Kirim untuk menyelesaikan latihan soal.");
+
+        // Tombol Kirim
+        builder.setPositiveButton("Kirim", (dialog, which) -> {
+            submitAnswersToServer();
+        });
+
+        // Tombol Kembali
+        builder.setNegativeButton("Kembali", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        // Buat dialog non-cancellable
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false); // Mencegah ditutup dengan tombol back
+        dialog.setCanceledOnTouchOutside(false); // Mencegah ditutup dengan menyentuh luar dialog
+
+        // Tampilkan dialog terlebih dahulu
+        dialog.show();
+
+        // Ubah warna tombol setelah dialog ditampilkan
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));
+    }
+
+
+
 
     private void submitAnswersToServer() {
         String url = "http://192.168.159.228:8000/api/submit-latihan-soal";
 
         JSONObject payload = new JSONObject();
         try {
-            payload.put("id_siswa", 1); // Ganti sesuai ID siswa
+            payload.put("id_siswa", 1);
             JSONArray answersArray = new JSONArray();
 
             for (ModelSoal soal : soalList) {
@@ -227,13 +282,21 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, payload,
                 response -> {
+                    // Simpan status soal telah dikerjakan
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("soal_dikerjakan_" + idLatihanSoal, true); // Tandai soal telah dikerjakan
+                    editor.apply();
+
                     Toast.makeText(this, "Jawaban berhasil dikirim!", Toast.LENGTH_SHORT).show();
+
+                    // Kirim hasil kembali ke DetailLatihanSoalActivity
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("result", "completed");
+                    setResult(RESULT_OK, resultIntent);
                     finish();
                 },
-                error -> {
-                    Toast.makeText(this, "Gagal mengirim jawaban. Periksa koneksi Anda.", Toast.LENGTH_SHORT).show();
-                    error.printStackTrace();
-                }) {
+                error -> Toast.makeText(this, "Gagal mengirim jawaban.", Toast.LENGTH_SHORT).show()) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
@@ -246,4 +309,13 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d("ProsesLatihanSoal", "onBackPressed dipanggil");
+        Toast.makeText(this, "Kembali tidak diizinkan saat mengerjakan soal.", Toast.LENGTH_SHORT).show();
+    }
+
 }

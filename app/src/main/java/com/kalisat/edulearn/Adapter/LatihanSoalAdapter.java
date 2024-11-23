@@ -45,6 +45,12 @@ public class LatihanSoalAdapter extends RecyclerView.Adapter<LatihanSoalAdapter.
         return new ViewHolder(view);
     }
 
+    public void setLatihanSoalList(List<ModelLatihanSoal> latihanSoalList) {
+        this.latihanSoalList = latihanSoalList;
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ModelLatihanSoal latihanSoal = latihanSoalList.get(position);

@@ -20,13 +20,13 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
 
     private Context context;
     private List<ModelTugas> tugasList;
-    private int idMapel; // Tambahkan idMapel
+    private int idMapel; // ID mapel untuk dikirim ke DetailTugasActivity
 
-    // Modifikasi konstruktor untuk menerima idMapel
+    // Konstruktor adapter
     public TugasAdapter(Context context, List<ModelTugas> tugasList, int idMapel) {
         this.context = context;
         this.tugasList = tugasList;
-        this.idMapel = idMapel; // Simpan idMapel
+        this.idMapel = idMapel;
     }
 
     @NonNull
@@ -49,8 +49,8 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
             Intent intent = new Intent(context, DetailTugasActivity.class);
 
             // Kirim data tugas melalui Intent
-            intent.putExtra("id", tugas.getId()); // Kirimkan ID tugas
-            intent.putExtra("id_mapel", idMapel); // Kirimkan ID mapel
+            intent.putExtra("id", tugas.getId()); // ID tugas
+            intent.putExtra("id_mapel", idMapel); // ID mapel
             intent.putExtra("judul_tugas", tugas.getJudulTugas());
             intent.putExtra("deskripsi", tugas.getDeskripsi());
             intent.putExtra("tanggal_tugas", tugas.getTanggalTugas());
@@ -65,14 +65,20 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
         return tugasList.size();
     }
 
+    // Metode untuk memperbarui data pada adapter
+    public void setTugasList(List<ModelTugas> tugasList) {
+        this.tugasList = tugasList;
+        notifyDataSetChanged(); // Beritahu adapter bahwa data telah berubah
+    }
+
     public static class TugasViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvJudulTugas, tvDeadline;
 
         public TugasViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvJudulTugas = itemView.findViewById(R.id.tv_judultugas);
-            tvDeadline = itemView.findViewById(R.id.tv_deadline);
+            tvJudulTugas = itemView.findViewById(R.id.tv_judultugas); // ID TextView di layout item_tugas.xml
+            tvDeadline = itemView.findViewById(R.id.tv_deadline); // ID TextView di layout item_tugas.xml
         }
     }
 }

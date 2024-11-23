@@ -47,6 +47,12 @@ public class MataPelajaranAdapter extends RecyclerView.Adapter<MataPelajaranAdap
         return new MataPelajaranViewHolder(view);
     }
 
+    public void setMataPelajaranList(List<MataPelajaran> mataPelajaranList) {
+        this.mataPelajaranList = mataPelajaranList;
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull MataPelajaranViewHolder holder, int position) {
         MataPelajaran mataPelajaran = mataPelajaranList.get(position);

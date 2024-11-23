@@ -35,7 +35,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RequestQueue requestQueue;
 
-    private int idSoal; // ID soal untuk digunakan pada tombol Mulai
+    private int idSoal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +57,14 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
         // Ambil ID soal dari Intent
         idSoal = getIntent().getIntExtra("id_soal", -1);
 
+        // Periksa apakah soal sudah dikerjakan
+        SharedPreferences sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE);
+        boolean soalDikerjakan = sharedPreferences.getBoolean("soal_dikerjakan_" + idSoal, false);
+
+        if (soalDikerjakan) {
+            btnMulai.setVisibility(View.GONE); // Sembunyikan tombol Mulai jika soal sudah dikerjakan
+        }
+
         if (idSoal != -1) {
             // Tampilkan progress bar
             progressBar.setVisibility(View.VISIBLE);
@@ -71,12 +79,12 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
 
         // Listener untuk tombol Mulai
         btnMulai.setOnClickListener(v -> {
-            // Mulai ke halaman proses latihan soal
             Intent intent = new Intent(DetailLatihanSoalActivity.this, ProsesLatihanSoalActivity.class);
-            intent.putExtra("id_soal", idSoal); // Kirim ID soal ke activity berikutnya
-            startActivity(intent);
+            intent.putExtra("id_latihan_soal", idSoal);
+            startActivityForResult(intent, 1); // Mulai aktivitas dengan result
         });
     }
+
 
     private void getDetailLatihanSoal(int idSoal) {
         String url = "http://192.168.159.228:8000/api/latihan-soal/" + idSoal;
@@ -90,25 +98,15 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
                             if (dataArray.length() > 0) {
                                 JSONObject dataObj = dataArray.getJSONObject(0);
 
-                                // Parsing data dari respons API
                                 String judulSoal = dataObj.getString("judul_soal");
                                 int jumlahSoal = dataObj.getInt("jumlah_soal");
                                 String tanggalSoal = dataObj.getString("tanggal_soal");
                                 String deadline = dataObj.getString("deadline");
                                 int id = dataObj.getInt("id");
 
-                                // Membuat objek model untuk detail soal
                                 ModelDetailLatihanSoal model = new ModelDetailLatihanSoal(judulSoal, jumlahSoal, tanggalSoal, deadline, id);
 
-                                // Update UI dengan data
                                 updateUI(model);
-
-                                // Kirim ID soal ke activity berikutnya
-                                btnMulai.setOnClickListener(v -> {
-                                    Intent intent = new Intent(this, ProsesLatihanSoalActivity.class);
-                                    intent.putExtra("id_latihan_soal", model.getId());  // Kirimkan id ke ProsesLatihanSoalActivity
-                                    startActivity(intent);
-                                });
                             } else {
                                 Toast.makeText(this, "Data soal tidak ditemukan.", Toast.LENGTH_SHORT).show();
                             }
@@ -120,20 +118,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
                         Toast.makeText(this, "Kesalahan parsing data.", Toast.LENGTH_SHORT).show();
                     }
                 },
-                error -> {
-                    // Tampilkan pesan error
-                    if (error.networkResponse != null) {
-                        if (error.networkResponse.statusCode == 401) {
-                            Toast.makeText(this, "Unauthorized! Silakan login ulang.", Toast.LENGTH_SHORT).show();
-                        } else if (error.networkResponse.statusCode == 404) {
-                            Toast.makeText(this, "Data tidak ditemukan.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Error: " + error.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(this, "Gagal terhubung ke server. Periksa koneksi Anda.", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
+                error -> Toast.makeText(this, "Gagal memuat data.", Toast.LENGTH_SHORT).show()) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
@@ -146,8 +131,6 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
             }
         };
 
-        // Tambahkan request ke Volley RequestQueue
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -156,10 +139,17 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
         tvJumlah.setText(String.valueOf(model.getJumlahSoal()));
         tvWaktuMulai.setText(model.getTanggalSoal());
         tvWaktuBerakhir.setText(model.getDeadline());
-
-        // Sembunyikan progress bar setelah data dimuat
         progressBar.setVisibility(View.GONE);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            if (data != null && "completed".equals(data.getStringExtra("result"))) {
+                Toast.makeText(this, "Latihan soal selesai!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
 }
