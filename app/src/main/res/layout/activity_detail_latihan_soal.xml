@@ -23,7 +23,7 @@
         android:layout_marginTop="32dp"
         android:text="Judul Latihan Soal"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="70dp"
         android:text="Jumlah Soal"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_judul" />
 
@@ -47,7 +47,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Mulai"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -58,7 +58,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Berakhir"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -69,7 +69,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="70dp"
         android:text="-"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/tv_judul" />
 
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="-"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@+id/tv_jumlah"
         app:layout_constraintTop_toBottomOf="@+id/tv_jumlah" />
 
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="-"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@+id/tv_waktumulai"
         app:layout_constraintTop_toBottomOf="@+id/tv_waktumulai" />
 

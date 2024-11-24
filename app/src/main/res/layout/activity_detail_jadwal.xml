@@ -47,7 +47,11 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="790dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/panel_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>

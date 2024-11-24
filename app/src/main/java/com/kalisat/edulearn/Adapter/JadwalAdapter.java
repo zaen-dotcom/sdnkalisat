@@ -11,14 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalisat.edulearn.Model.Jadwal;
 import com.kalisat.edulearn.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalViewHolder> {
 
-    private List<Jadwal> jadwalList; // List of Jadwal data
+    private List<Jadwal> jadwalList;
 
+    // Constructor
     public JadwalAdapter(List<Jadwal> jadwalList) {
-        this.jadwalList = jadwalList;
+        this.jadwalList = jadwalList != null ? jadwalList : new ArrayList<>();
     }
 
     @NonNull
@@ -32,25 +34,34 @@ public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalView
     public void onBindViewHolder(@NonNull JadwalViewHolder holder, int position) {
         Jadwal jadwal = jadwalList.get(position);
 
-        // Set hari
         holder.tvHari.setText(jadwal.getHari());
 
-        // Set mapel dan waktu
-        holder.tvMapel1.setText(jadwal.getMapel1());
-        holder.tvStartEnd1.setText(jadwal.getWaktu1());
+        // Mapel 1
+        holder.tvMapel1.setText(jadwal.getMapel1() != null ? jadwal.getMapel1() : "-");
+        holder.tvStartEnd1.setText(jadwal.getWaktu1() != null ? jadwal.getWaktu1() : "-");
 
-        holder.tvMapel2.setText(jadwal.getMapel2());
-        holder.tvStartEnd2.setText(jadwal.getWaktu2());
+        // Mapel 2
+        holder.tvMapel2.setText(jadwal.getMapel2() != null ? jadwal.getMapel2() : "-");
+        holder.tvStartEnd2.setText(jadwal.getWaktu2() != null ? jadwal.getWaktu2() : "-");
 
-        holder.tvMapel3.setText(jadwal.getMapel3());
-        holder.tvStartEnd3.setText(jadwal.getWaktu3());
+        // Mapel 3
+        holder.tvMapel3.setText(jadwal.getMapel3() != null ? jadwal.getMapel3() : "-");
+        holder.tvStartEnd3.setText(jadwal.getWaktu3() != null ? jadwal.getWaktu3() : "-");
     }
+
 
     @Override
     public int getItemCount() {
         return jadwalList.size();
     }
 
+    // Fungsi untuk memperbarui data
+    public void updateData(List<Jadwal> newJadwalList) {
+        this.jadwalList = newJadwalList != null ? newJadwalList : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    // ViewHolder
     public static class JadwalViewHolder extends RecyclerView.ViewHolder {
         TextView tvHari, tvMapel1, tvStartEnd1, tvMapel2, tvStartEnd2, tvMapel3, tvStartEnd3;
 

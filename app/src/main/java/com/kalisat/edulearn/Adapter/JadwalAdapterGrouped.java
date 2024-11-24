@@ -14,16 +14,19 @@ import com.kalisat.edulearn.Model.ModelJadwalDetail;
 import com.kalisat.edulearn.Model.ModelJadwalGrouped;
 import com.kalisat.edulearn.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrouped.ViewHolder> {
 
     private Context context;
-    private List<ModelJadwalGrouped> jadwalGroupedList;
+    private List<ModelJadwalGrouped> jadwalGroupedList = new ArrayList<>(); // Inisialisasi list kosong
 
     public JadwalAdapterGrouped(Context context, List<ModelJadwalGrouped> jadwalGroupedList) {
         this.context = context;
-        this.jadwalGroupedList = jadwalGroupedList;
+        if (jadwalGroupedList != null) {
+            this.jadwalGroupedList = jadwalGroupedList;
+        }
     }
 
     @NonNull
@@ -86,7 +89,12 @@ public class JadwalAdapterGrouped extends RecyclerView.Adapter<JadwalAdapterGrou
 
     @Override
     public int getItemCount() {
-        return jadwalGroupedList.size();
+        return jadwalGroupedList != null ? jadwalGroupedList.size() : 0;
+    }
+
+    public void updateData(List<ModelJadwalGrouped> newGroupedList) {
+        this.jadwalGroupedList = newGroupedList != null ? newGroupedList : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

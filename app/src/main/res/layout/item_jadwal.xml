@@ -8,8 +8,6 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         app:cardBackgroundColor="@color/biru_muda"
         app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
