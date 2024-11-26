@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:text="Hi Megatron"
         android:textColor="@color/black"
         android:textSize="30sp"
@@ -33,7 +33,7 @@
 
     <!-- Quote per Hari -->
     <TextView
-        android:id="@+id/tasks_pending"
+        android:id="@+id/tv_quote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -56,7 +56,7 @@
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tasks_pending" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_quote" />
 
     <!-- Tombol "Lihat Semua" -->
     <TextView
@@ -70,7 +70,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tasks_pending" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_quote" />
 
     <!-- CardView untuk Jadwal Hari Ini -->
     <androidx.cardview.widget.CardView

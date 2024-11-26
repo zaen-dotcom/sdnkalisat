@@ -68,6 +68,21 @@ public class HomeFragment extends Fragment {
         jadwalAdapter = new JadwalAdapter(new ArrayList<>());
         recyclerView.setAdapter(jadwalAdapter);
 
+        Map<String, String> quotes = new HashMap<>();
+        quotes.put("Senin", "Awali pekan ini dengan belajar penuh semangat!");
+        quotes.put("Selasa", "Belajar hari ini adalah investasi masa depan.");
+        quotes.put("Rabu", "Raih pemahaman baru di tengah pekan.");
+        quotes.put("Kamis", "Tetap fokus, ilmu adalah kunci kesuksesan.");
+        quotes.put("Jumat", "Akhiri minggu dengan prestasi terbaik.");
+        quotes.put("Sabtu", "Santai, namun tetap asah pengetahuan.");
+        quotes.put("Minggu", "Persiapkan diri untuk belajar yang produktif.");
+
+        // Tampilkan quote berdasarkan hari
+        TextView tvQuote = rootView.findViewById(R.id.tv_quote);
+        String currentDay = getCurrentDay();
+        String quoteForToday = quotes.containsKey(currentDay) ? quotes.get(currentDay) : "Belajar adalah jendela dunia!";
+        tvQuote.setText(quoteForToday);
+
         if (userToken == null) {
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_session", requireContext().MODE_PRIVATE);
             userToken = sharedPreferences.getString("user_token", null);
@@ -89,6 +104,7 @@ public class HomeFragment extends Fragment {
 
         return rootView;
     }
+
 
     private void observeViewModel() {
         jadwalViewModel.getJadwalGroupedList().observe(getViewLifecycleOwner(), groupedList -> {
