@@ -29,6 +29,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- RecyclerView untuk menampilkan latihan soal -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewLatihanSoal"
         android:layout_width="match_parent"
@@ -39,4 +40,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/panel_header" />
 
+    <!-- TextView untuk menampilkan pesan jika latihan soal kosong -->
+    <TextView
+        android:id="@+id/tv_noLatihanSoal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Tidak ada latihan soal"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/panel_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>

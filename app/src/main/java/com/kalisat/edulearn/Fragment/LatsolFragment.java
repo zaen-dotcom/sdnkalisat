@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public class LatsolFragment extends Fragment {
     private RecyclerView recyclerView;
     private LatihanSoalAdapter adapter;
     private LatihanSoalViewModel latihanSoalViewModel;
+    private TextView tvNoLatihanSoal;
 
     public static LatsolFragment newInstance(int idMapel) {
         LatsolFragment fragment = new LatsolFragment();
@@ -54,6 +56,8 @@ public class LatsolFragment extends Fragment {
         adapter = new LatihanSoalAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
+        tvNoLatihanSoal = view.findViewById(R.id.tv_noLatihanSoal);
+
         // Inisialisasi ViewModel
         latihanSoalViewModel = new ViewModelProvider(this).get(LatihanSoalViewModel.class);
 
@@ -61,6 +65,11 @@ public class LatsolFragment extends Fragment {
         latihanSoalViewModel.getLatihanSoalListLiveData().observe(getViewLifecycleOwner(), latihanSoalList -> {
             if (latihanSoalList != null && !latihanSoalList.isEmpty()) {
                 adapter.setLatihanSoalList(latihanSoalList); // Perbarui data di adapter
+                recyclerView.setVisibility(View.VISIBLE);
+                tvNoLatihanSoal.setVisibility(View.GONE);  // Menyembunyikan pesan
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                tvNoLatihanSoal.setVisibility(View.VISIBLE);  // Menampilkan pesan "Tidak ada latihan soal"
             }
         });
 

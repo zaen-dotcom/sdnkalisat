@@ -1,5 +1,6 @@
 package com.kalisat.edulearn.Activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 public class DetailLatihanSoalActivity extends AppCompatActivity {
 
-    private TextView tvJudul, tvJumlah, tvWaktuMulai, tvWaktuBerakhir;
+    private TextView tvJudul, tvJumlah, tvWaktuMulai, tvWaktuBerakhir, tvNilai; // Tambahkan tvNilai
     private Button btnMulai, btnKembali;
     private ProgressBar progressBar;
     private RequestQueue requestQueue;
@@ -47,6 +48,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
         tvJumlah = findViewById(R.id.tv_jumlah);
         tvWaktuMulai = findViewById(R.id.tv_waktumulai);
         tvWaktuBerakhir = findViewById(R.id.tv_waktuberakhir);
+        tvNilai = findViewById(R.id.tv_nilai); // Inisialisasi tvNilai
         btnMulai = findViewById(R.id.btn_mulai);
         btnKembali = findViewById(R.id.btn_kembali);
         progressBar = findViewById(R.id.progressBar);
@@ -70,6 +72,9 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             // Panggil API untuk mengambil detail soal
             getDetailLatihanSoal(idSoal);
+
+            // Panggil API untuk mengambil nilai soal
+            getNilaiLatihanSoal(idSoal);
         } else {
             Toast.makeText(this, "ID soal tidak ditemukan.", Toast.LENGTH_SHORT).show();
         }
@@ -79,12 +84,33 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
 
         // Listener untuk tombol Mulai
         btnMulai.setOnClickListener(v -> {
-            Intent intent = new Intent(DetailLatihanSoalActivity.this, ProsesLatihanSoalActivity.class);
-            intent.putExtra("id_latihan_soal", idSoal);
-            startActivityForResult(intent, 1); // Mulai aktivitas dengan result
+            // Buat AlertDialog untuk peringatan
+            AlertDialog.Builder builder = new AlertDialog.Builder(DetailLatihanSoalActivity.this);
+            builder.setTitle("Peringatan")
+                    .setMessage("Anda tidak dapat keluar jika latihan sedang berlangsung. Apakah Anda ingin melanjutkan?")
+                    .setCancelable(false) // Membuat dialog tidak dapat ditutup kecuali dengan tombol
+                    .setPositiveButton("Ya", (dialog, which) -> {
+                        // Lanjutkan ke aktivitas ProsesLatihanSoal
+                        Intent intent = new Intent(DetailLatihanSoalActivity.this, ProsesLatihanSoalActivity.class);
+                        intent.putExtra("id_latihan_soal", idSoal);
+                        startActivityForResult(intent, 1); // Mulai aktivitas dengan result
+                    })
+                    .setNegativeButton("Tidak", (dialog, which) -> {
+                        // Tutup dialog
+                        dialog.dismiss();
+                    });
+
+            // Tampilkan dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // Set warna tombol setelah dialog ditampilkan
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));
         });
     }
-
 
     private void getDetailLatihanSoal(int idSoal) {
         String url = "http://192.168.159.228:8000/api/latihan-soal/" + idSoal;
@@ -119,6 +145,50 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
                     }
                 },
                 error -> Toast.makeText(this, "Gagal memuat data.", Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SharedPreferences sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("user_token", "");
+
+                headers.put("Authorization", "Bearer " + token);
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getNilaiLatihanSoal(int idSoal) {
+        String url = "http://192.168.159.228:8000/api/latihan-soal/" + idSoal + "/nilai";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        // Periksa status respons
+                        if (response.getString("status").equals("success")) {
+                            // Akses objek 'data' dan ambil nilai
+                            JSONObject dataObj = response.getJSONObject("data");
+
+                            if (dataObj != null) {
+                                // Ambil nilai dari key "Nilai"
+                                int nilaiSoal = dataObj.getInt("Nilai");
+
+                                // Update UI untuk menampilkan nilai (hanya angka)
+                                tvNilai.setText(String.valueOf(nilaiSoal));
+                            } else {
+                                Toast.makeText(this, "Data nilai tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "Gagal memuat nilai soal.", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Latihan soal belum diselesaikan", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Gagal memuat data nilai.", Toast.LENGTH_SHORT).show()) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();

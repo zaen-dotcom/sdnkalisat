@@ -36,9 +36,20 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="70dp"
         android:text="Jumlah Soal"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_judul" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Nilai"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/textView8"
@@ -47,9 +58,19 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Mulai"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/tv_nilai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="-"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_jumlah"
+        app:layout_constraintTop_toBottomOf="@+id/tv_jumlah" />
 
     <TextView
         android:id="@+id/textView21"
@@ -58,7 +79,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Berakhir"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -69,7 +90,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="70dp"
         android:text="-"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/tv_judul" />
 
@@ -79,9 +100,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="-"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_jumlah"
-        app:layout_constraintTop_toBottomOf="@+id/tv_jumlah" />
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_nilai"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nilai" />
 
     <TextView
         android:id="@+id/tv_waktuberakhir"
@@ -89,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="-"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/tv_waktumulai"
         app:layout_constraintTop_toBottomOf="@+id/tv_waktumulai" />
 

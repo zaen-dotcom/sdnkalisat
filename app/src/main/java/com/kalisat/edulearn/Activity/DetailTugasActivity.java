@@ -186,7 +186,7 @@ public class DetailTugasActivity extends AppCompatActivity {
         // Cek apakah foto sudah diupload
         if (imageUri == null) {
             // Jika foto belum diupload, tampilkan alert
-            showAlertDialog("Error", "Silakan upload foto terlebih dahulu.");
+            showAlertDialog("Peringatan", "Silahkan upload foto terlebih dahulu.");
             return;
         }
 
