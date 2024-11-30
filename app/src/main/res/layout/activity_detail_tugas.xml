@@ -23,6 +23,17 @@
             android:layout_height="match_parent">
 
             <Button
+                android:id="@+id/uploadtugas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:text="Pilih foto"
+                android:backgroundTint="@color/soft_green"
+                app:layout_constraintEnd_toStartOf="@+id/btn_kirim"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
                 android:id="@+id/btn_kirim"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="45dp"
                 android:text="Batas Waktu"
                 android:textColor="@color/darker_gray"
                 android:textSize="14sp"
@@ -105,6 +116,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tempat_thumnailfoto"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_marginTop="8dp"
@@ -116,41 +128,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
-        <TextView
-            android:id="@+id/tv_upload"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="Upload Tugas"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/uploadtugas"
-            android:layout_width="100dp"
-            android:layout_height="65dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/white"
-            android:elevation="4dp"
-            app:cardCornerRadius="10dp"
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_upload">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_add" />
-        </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:id="@+id/linearLayoutThumbnails"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

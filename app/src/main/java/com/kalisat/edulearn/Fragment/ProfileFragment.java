@@ -208,8 +208,11 @@ public class ProfileFragment extends Fragment {
 
     private void clearSession() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_session", requireContext().MODE_PRIVATE);
-        sharedPreferences.edit().clear().apply();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("user_token");
+        editor.apply();
     }
+
 
     private void navigateToIntro() {
         Intent intent = new Intent(getActivity(), IntroActivity.class);

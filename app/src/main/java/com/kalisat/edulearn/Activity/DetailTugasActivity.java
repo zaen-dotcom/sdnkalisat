@@ -2,25 +2,27 @@ package com.kalisat.edulearn.Activity;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kalisat.edulearn.R;
@@ -28,22 +30,24 @@ import com.kalisat.edulearn.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
-import android.util.Base64;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DetailTugasActivity extends AppCompatActivity {
 
-    private TextView tvJudulTgs, tvTenggat, tvDeskripsi, tvUpload;
+    private TextView tvJudulTgs, tvTenggat, tvDeskripsi;
     private ImageView icKembali;
     private Button btnKirim;
     private int id;
-    private RequestQueue requestQueue;
-
+    private LinearLayout linearLayoutThumbnails;
     private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri imageUri;
+    private List<Uri> imageUris = new ArrayList<>(); // List untuk menyimpan foto yang dipilih
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +58,18 @@ public class DetailTugasActivity extends AppCompatActivity {
         tvJudulTgs = findViewById(R.id.tv_judultgs);
         tvTenggat = findViewById(R.id.tv_tenggat);
         tvDeskripsi = findViewById(R.id.tv_deskripsi);
-        tvUpload = findViewById(R.id.tv_upload);
         icKembali = findViewById(R.id.ic_kembali);
         btnKirim = findViewById(R.id.btn_kirim);
+        linearLayoutThumbnails = findViewById(R.id.linearLayoutThumbnails);
 
-        // Inisialisasi Volley RequestQueue
         requestQueue = Volley.newRequestQueue(this);
+
+        // Tombol kembali
+        icKembali.setOnClickListener(v -> finish());
 
         // Ambil data dari Intent
         Intent intent = getIntent();
         id = intent.getIntExtra("id", -1);
-
-        // Tombol kembali
-        icKembali.setOnClickListener(v -> finish());
 
         // Validasi ID
         if (id == -1) {
@@ -80,8 +83,8 @@ public class DetailTugasActivity extends AppCompatActivity {
         getDataFromAPI();
 
         // Tombol untuk upload tugas (pilih gambar)
-        CardView uploadCardView = findViewById(R.id.uploadtugas);
-        uploadCardView.setOnClickListener(v -> openGallery());
+        Button btnUploadTugas = findViewById(R.id.uploadtugas);
+        btnUploadTugas.setOnClickListener(v -> openGallery());
 
         // Tombol Kirim untuk mengirim tugas
         btnKirim.setOnClickListener(v -> submitTask(v));
@@ -100,43 +103,34 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         Log.d("DetailTugasActivity", "Token yang dikirim untuk GET API: " + token);
 
+        // Request data tugas
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d("DetailTugasActivity", "Respons API: " + response.toString());
-                            if (response.getString("status").equals("success")) {
-                                JSONObject data = response.getJSONArray("data").getJSONObject(0);
+                response -> {
+                    try {
+                        if (response.getString("status").equals("success")) {
+                            JSONObject data = response.getJSONArray("data").getJSONObject(0);
 
-                                String judulTugas = data.optString("judul_tugas", "Judul tidak tersedia");
-                                String tenggatWaktu = data.optString("deadline", "Tidak ada deadline");
-                                String deskripsi = data.optString("deskripsi", "Deskripsi tidak tersedia");
+                            String judulTugas = data.optString("judul_tugas", "Judul tidak tersedia");
+                            String tenggatWaktu = data.optString("deadline", "Tidak ada deadline");
+                            String deskripsi = data.optString("deskripsi", "Deskripsi tidak tersedia");
 
-                                tvJudulTgs.setText(judulTugas);
-                                tvTenggat.setText("Deadline: " + tenggatWaktu);
-                                tvDeskripsi.setText(deskripsi);
-                            } else {
-                                Toast.makeText(DetailTugasActivity.this, "Gagal mengambil data tugas.", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(DetailTugasActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            tvJudulTgs.setText(judulTugas);
+                            tvTenggat.setText("Deadline: " + tenggatWaktu);
+                            tvDeskripsi.setText(deskripsi);
+                        } else {
+                            Toast.makeText(DetailTugasActivity.this, "Gagal mengambil data tugas.", Toast.LENGTH_SHORT).show();
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(DetailTugasActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(DetailTugasActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }) {
+                error -> Toast.makeText(DetailTugasActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show()) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
                 headers.put("Accept", "application/json");
-                Log.d("DetailTugasActivity", "Headers: " + headers.toString());
                 return headers;
             }
         };
@@ -156,41 +150,63 @@ public class DetailTugasActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            imageUri = data.getData();
+            // Mendapatkan URI gambar yang dipilih
+            Uri imageUri = data.getData();
+            imageUris.add(imageUri); // Menambahkan foto ke list
 
-            String fileName = getFileName(imageUri);
-            String newFileName = "Tugas_" + System.currentTimeMillis() + "_" + fileName;
-            tvUpload.setText("Foto telah diupload: " + newFileName);
+            // Menyimpan URI gambar ke SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("task_data", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            // Menggunakan set sebagai key agar bisa menyimpan beberapa gambar (jika ada lebih dari satu)
+            editor.putString("image_uri_" + imageUris.size(), imageUri.toString());
+            editor.apply();
+
+            // Membuat layout baru untuk thumbnail foto dan tombol X
+            View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
+
+            // Menampilkan gambar thumbnail
+            ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
+            imageThumbnail.setImageURI(imageUri);
+
+            // Menambahkan event listener untuk tombol X
+            ImageView imageClose = itemView.findViewById(R.id.ic_remove);
+            imageClose.setOnClickListener(v -> {
+                // Menghapus item foto ketika tombol X ditekan
+                linearLayoutThumbnails.removeView(itemView);
+                imageUris.remove(imageUri); // Menghapus foto dari list
+
+                // Menghapus URI gambar dari SharedPreferences
+                SharedPreferences.Editor editorRemove = sharedPreferences.edit();
+                editorRemove.remove("image_uri_" + imageUris.size()); // Menghapus key yang sesuai
+                editorRemove.apply();
+            });
+
+            // Menambahkan item (foto + tombol X) ke LinearLayout
+            linearLayoutThumbnails.addView(itemView);
         }
     }
 
-    private String getFileName(Uri uri) {
-        String fileName = null;
-        ContentResolver contentResolver = getContentResolver();
 
-        if (uri.getScheme().equals("content")) {
-            try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    fileName = cursor.getString(nameIndex);
-                }
-            }
-        } else if (uri.getScheme().equals("file")) {
-            fileName = new File(uri.getPath()).getName();
-        }
-        return fileName;
-    }
-
-    // Fungsi untuk mengirim tugas (upload foto dan data tugas)
     public void submitTask(View view) {
-        // Cek apakah foto sudah diupload
-        if (imageUri == null) {
-            // Jika foto belum diupload, tampilkan alert
+        if (imageUris.isEmpty()) {
             showAlertDialog("Peringatan", "Silahkan upload foto terlebih dahulu.");
             return;
         }
 
-        String base64Image = convertImageToBase64(imageUri);
+        // Kompres gambar sebelum mengonversinya ke Base64
+        StringBuilder base64Images = new StringBuilder();
+
+        for (Uri uri : imageUris) {
+            String base64Image = compressImageAndConvertToBase64(uri);
+            if (base64Image != null) {
+                base64Images.append(base64Image).append(",");
+            }
+        }
+
+        // Menghapus tanda koma terakhir
+        if (base64Images.length() > 0) {
+            base64Images.deleteCharAt(base64Images.length() - 1);
+        }
 
         String url = "http://192.168.159.228:8000/api/submit-tugas";
         String token = getSharedPreferences("user_session", MODE_PRIVATE).getString("user_token", "");
@@ -203,50 +219,38 @@ public class DetailTugasActivity extends AppCompatActivity {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("id_tugas", id);
-            jsonParams.put("foto", base64Image);
-            Log.d("SubmitTask", "Body JSON yang dikirim: " + jsonParams.toString());
+            jsonParams.put("foto", base64Images.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonParams,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d("SubmitTask", "Respons dari server: " + response.toString());
-                            if (response.getString("status").equals("success")) {
-                                showAlertDialog("Berhasil", "Tugas berhasil di-submit.");
-                            } else {
-                                showAlertDialog("Gagal", "Gagal mengirim tugas. Silakan coba lagi.");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showAlertDialog("Error", "Terjadi kesalahan: " + e.getMessage());
+                response -> {
+                    try {
+                        Log.d("API Response", response.toString());
+                        if (response.getString("status").equals("success")) {
+                            showAlertDialog("Berhasil", "Tugas berhasil di-submit.");
+                        } else {
+                            showAlertDialog("Gagal", "Gagal mengirim tugas. Silakan coba lagi.");
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        showAlertDialog("Error", "Terjadi kesalahan: " + e.getMessage());
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("SubmitTask", "Volley Error: " + error.getMessage());
-                        if (error.networkResponse != null) {
-                            Log.e("SubmitTask", "Respons error dari server: " + new String(error.networkResponse.data));
-                        }
-                        showAlertDialog("Error", "Gagal mengirim tugas. Pastikan Anda terhubung ke internet.");
-                    }
+                error -> {
+                    Log.e("API Error", error.getMessage());
+                    showAlertDialog("Perhatian", "Anda hanya bisa mengirimkan 1 foto.");
                 }) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
                 headers.put("Accept", "application/json");
-                Log.d("SubmitTask", "Headers: " + headers.toString());
                 return headers;
             }
         };
 
-        Log.d("SubmitTask", "Mengirim data ke URL: " + url);
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -259,17 +263,33 @@ public class DetailTugasActivity extends AppCompatActivity {
                 .show();
     }
 
-    private String convertImageToBase64(Uri imageUri) {
+    private String compressImageAndConvertToBase64(Uri imageUri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-            inputStream.close();
+            Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
 
-            return Base64.encodeToString(bytes, Base64.DEFAULT);
+            int maxWidth = 1024;
+            int maxHeight = 1024;
+            int width = originalBitmap.getWidth();
+            int height = originalBitmap.getHeight();
+            float scaleFactor = Math.min((float) maxWidth / width, (float) maxHeight / height);
+
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap,
+                    (int) (width * scaleFactor),
+                    (int) (height * scaleFactor),
+                    false);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+
+            byte[] byteArray = baos.toByteArray();
+
+            return Base64.encodeToString(byteArray, Base64.DEFAULT);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 }
+
