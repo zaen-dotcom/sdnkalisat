@@ -62,6 +62,9 @@ public class DetailTugasActivity extends AppCompatActivity {
         btnKirim = findViewById(R.id.btn_kirim);
         linearLayoutThumbnails = findViewById(R.id.linearLayoutThumbnails);
 
+        // Tambahkan ini untuk TextView nilai tugas
+        TextView tvNilai = findViewById(R.id.tv_nilai);
+
         requestQueue = Volley.newRequestQueue(this);
 
         // Tombol kembali
@@ -71,7 +74,6 @@ public class DetailTugasActivity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getIntExtra("id", -1);
 
-        // Validasi ID
         if (id == -1) {
             Log.e("DetailTugasActivity", "ID tidak valid, tidak ada di Intent.");
             Toast.makeText(this, "ID tidak valid!", Toast.LENGTH_SHORT).show();
@@ -82,12 +84,79 @@ public class DetailTugasActivity extends AppCompatActivity {
         // Panggil API untuk mendapatkan data tugas
         getDataFromAPI();
 
-        // Tombol untuk upload tugas (pilih gambar)
+        // Tambahkan panggilan API untuk getNilaiTugas
+        getNilaiTugas(tvNilai);
+
+        // Tombol upload tugas (pilih gambar)
         Button btnUploadTugas = findViewById(R.id.uploadtugas);
         btnUploadTugas.setOnClickListener(v -> openGallery());
 
         // Tombol Kirim untuk mengirim tugas
         btnKirim.setOnClickListener(v -> submitTask(v));
+    }
+
+    // Tambahkan metode untuk memanggil API getNilaiTugas
+    private void getNilaiTugas(TextView tvNilai) {
+        String url = "http://192.168.159.228:8000/api/tugas/" + id + "/nilai";
+        String token = getSharedPreferences("user_session", MODE_PRIVATE).getString("user_token", "");
+
+        if (token.isEmpty()) {
+            Toast.makeText(this, "Token tidak tersedia. Silakan login ulang.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if (response.getString("status").equals("success")) {
+                            JSONObject data = response.getJSONObject("data");
+
+                            // Ambil foto dan nilai dari respon
+                            String fotoBase64 = data.optString("foto", null);
+                            String nilai = data.optString("grade", "Belum dinilai");
+
+                            // Tampilkan nilai pada TextView
+                            tvNilai.setText("Nilai: " + nilai);
+
+                            // Decode foto (jika ada) dan tambahkan ke layout
+                            if (fotoBase64 != null && !fotoBase64.isEmpty()) {
+                                byte[] decodedString = Base64.decode(fotoBase64, Base64.DEFAULT);
+                                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                                // Menggunakan layout item_pilihfoto
+                                View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
+
+                                // Set thumbnail
+                                ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
+                                imageThumbnail.setImageBitmap(decodedBitmap);
+
+                                // Sembunyikan tombol X karena foto berasal dari API
+                                ImageView imageClose = itemView.findViewById(R.id.ic_remove);
+                                imageClose.setVisibility(View.GONE);
+
+                                // Tambahkan ke layout
+                                linearLayoutThumbnails.addView(itemView);
+                            }
+                        } else {
+                            Toast.makeText(this, "Gagal mendapatkan nilai tugas.", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void getDataFromAPI() {
@@ -154,13 +223,6 @@ public class DetailTugasActivity extends AppCompatActivity {
             Uri imageUri = data.getData();
             imageUris.add(imageUri); // Menambahkan foto ke list
 
-            // Menyimpan URI gambar ke SharedPreferences
-            SharedPreferences sharedPreferences = getSharedPreferences("task_data", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            // Menggunakan set sebagai key agar bisa menyimpan beberapa gambar (jika ada lebih dari satu)
-            editor.putString("image_uri_" + imageUris.size(), imageUri.toString());
-            editor.apply();
-
             // Membuat layout baru untuk thumbnail foto dan tombol X
             View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
 
@@ -174,17 +236,13 @@ public class DetailTugasActivity extends AppCompatActivity {
                 // Menghapus item foto ketika tombol X ditekan
                 linearLayoutThumbnails.removeView(itemView);
                 imageUris.remove(imageUri); // Menghapus foto dari list
-
-                // Menghapus URI gambar dari SharedPreferences
-                SharedPreferences.Editor editorRemove = sharedPreferences.edit();
-                editorRemove.remove("image_uri_" + imageUris.size()); // Menghapus key yang sesuai
-                editorRemove.apply();
             });
 
             // Menambahkan item (foto + tombol X) ke LinearLayout
             linearLayoutThumbnails.addView(itemView);
         }
     }
+
 
 
     public void submitTask(View view) {
@@ -292,4 +350,3 @@ public class DetailTugasActivity extends AppCompatActivity {
         }
     }
 }
-
