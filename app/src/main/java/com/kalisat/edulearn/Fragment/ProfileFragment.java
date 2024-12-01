@@ -65,14 +65,6 @@ public class ProfileFragment extends Fragment {
         CardView logoutCard = view.findViewById(R.id.card_logout);
         logoutCard.setOnClickListener(v -> showLogoutConfirmationDialog());
 
-        // Listener untuk img_profile
-        ImageView imgProfile = view.findViewById(R.id.img_profile);
-        imgProfile.setOnClickListener(v -> openFilePicker());
-
-        // Listener untuk bgcam
-        ImageView bgCam = view.findViewById(R.id.bgcam);
-        bgCam.setOnClickListener(v -> openFilePicker());
-
         // Listener untuk gantipw (CardView) dan ic_editpw (ImageView)
         CardView gantiPw = view.findViewById(R.id.gantipw);
         ImageView icEditPw = view.findViewById(R.id.ic_editpw);
@@ -136,13 +128,6 @@ public class ProfileFragment extends Fragment {
     private void openUbahSandiActivity() {
         Intent intent = new Intent(getActivity(), UbahSandiActivity.class);
         startActivity(intent);
-    }
-
-    private void openFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, PICK_FILE_REQUEST_CODE);
     }
 
     @Override
@@ -233,13 +218,5 @@ public class ProfileFragment extends Fragment {
                 .show();
     }
 
-    // Metode umum untuk menampilkan alert dialog
-    private void showAlert(String title, String message) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .show();
-    }
 }
+

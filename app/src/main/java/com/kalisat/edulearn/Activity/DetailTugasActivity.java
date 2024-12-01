@@ -46,7 +46,7 @@ public class DetailTugasActivity extends AppCompatActivity {
     private int id;
     private LinearLayout linearLayoutThumbnails;
     private static final int PICK_IMAGE_REQUEST = 1;
-    private List<Uri> imageUris = new ArrayList<>(); // List untuk menyimpan foto yang dipilih
+    private List<Uri> imageUris = new ArrayList<>();
     private RequestQueue requestQueue;
 
     @Override
