@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Nama Pengguna -->
+
     <TextView
         android:id="@+id/tvnama"
         android:layout_width="wrap_content"
@@ -199,7 +199,7 @@
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-    
+
     <!-- CardView untuk Ganti Password -->
     <androidx.cardview.widget.CardView
         android:id="@+id/gantipw"

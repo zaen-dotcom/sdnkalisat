@@ -95,7 +95,6 @@ public class DetailTugasActivity extends AppCompatActivity {
         btnKirim.setOnClickListener(v -> submitTask(v));
     }
 
-    // Tambahkan metode untuk memanggil API getNilaiTugas
     private void getNilaiTugas(TextView tvNilai) {
         String url = "http://192.168.159.228:8000/api/tugas/" + id + "/nilai";
         String token = getSharedPreferences("user_session", MODE_PRIVATE).getString("user_token", "");
@@ -112,32 +111,26 @@ public class DetailTugasActivity extends AppCompatActivity {
                         if (response.getString("status").equals("success")) {
                             JSONObject data = response.getJSONObject("data");
 
-                            // Ambil foto dan nilai dari respon
-                            String fotoBase64 = data.optString("foto", null);
+                            // Ambil nilai dari respon
                             String nilai = data.optString("grade", "Belum dinilai");
 
                             // Tampilkan nilai pada TextView
                             tvNilai.setText("Nilai: " + nilai);
 
-                            // Decode foto (jika ada) dan tambahkan ke layout
-                            if (fotoBase64 != null && !fotoBase64.isEmpty()) {
-                                byte[] decodedString = Base64.decode(fotoBase64, Base64.DEFAULT);
-                                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            // Menggunakan layout item_pilihfoto untuk menampilkan thumbnail foto
+                            View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
 
-                                // Menggunakan layout item_pilihfoto
-                                View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
+                            // Set thumbnail atau placeholder pada ImageView
+                            ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
+                            // Gunakan gambar placeholder atau ikon default, misalnya:
+                            imageThumbnail.setImageResource(R.drawable.ic_image);  // Ganti dengan gambar placeholder yang sesuai
 
-                                // Set thumbnail
-                                ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
-                                imageThumbnail.setImageBitmap(decodedBitmap);
+                            // Sembunyikan tombol X karena foto berasal dari API dan tidak akan dihapus
+                            ImageView imageClose = itemView.findViewById(R.id.ic_remove);
+                            imageClose.setVisibility(View.GONE);
 
-                                // Sembunyikan tombol X karena foto berasal dari API
-                                ImageView imageClose = itemView.findViewById(R.id.ic_remove);
-                                imageClose.setVisibility(View.GONE);
-
-                                // Tambahkan ke layout
-                                linearLayoutThumbnails.addView(itemView);
-                            }
+                            // Tambahkan ke layout
+                            linearLayoutThumbnails.addView(itemView);
                         } else {
                             Toast.makeText(this, "Gagal mendapatkan nilai tugas.", Toast.LENGTH_SHORT).show();
                         }
@@ -158,6 +151,7 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
+
 
     private void getDataFromAPI() {
         String url = "http://192.168.159.228:8000/api/tugas/" + id;
@@ -221,7 +215,15 @@ public class DetailTugasActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             // Mendapatkan URI gambar yang dipilih
             Uri imageUri = data.getData();
-            imageUris.add(imageUri); // Menambahkan foto ke list
+
+            // Cek apakah sudah ada gambar yang dipilih sebelumnya
+            if (imageUris.size() >= 1) {
+                showAlertDialog("Peringatan", "Anda hanya bisa mengirim 1 foto.");
+                return;
+            }
+
+            // Menambahkan foto ke list imageUris
+            imageUris.add(imageUri);
 
             // Membuat layout baru untuk thumbnail foto dan tombol X
             View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
@@ -242,8 +244,6 @@ public class DetailTugasActivity extends AppCompatActivity {
             linearLayoutThumbnails.addView(itemView);
         }
     }
-
-
 
     public void submitTask(View view) {
         if (imageUris.isEmpty()) {
@@ -277,7 +277,7 @@ public class DetailTugasActivity extends AppCompatActivity {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("id_tugas", id);
-            jsonParams.put("foto", base64Images.toString());
+            jsonParams.put("foto", base64Images.toString()); // Mengirimkan foto dalam format Base64
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -298,7 +298,7 @@ public class DetailTugasActivity extends AppCompatActivity {
                 },
                 error -> {
                     Log.e("API Error", error.getMessage());
-                    showAlertDialog("Perhatian", "Anda hanya bisa mengirimkan 1 foto.");
+                    showAlertDialog("Perhatian", "Terjadi kesalahan saat mengirim tugas.");
                 }) {
             @Override
             public Map<String, String> getHeaders() {
