@@ -25,6 +25,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kalisat.edulearn.Fragment.TugasFragment;
 import com.kalisat.edulearn.R;
 
 import org.json.JSONException;
@@ -247,7 +248,7 @@ public class DetailTugasActivity extends AppCompatActivity {
 
     public void submitTask(View view) {
         if (imageUris.isEmpty()) {
-            showAlertDialog("Peringatan", "Silahkan upload foto terlebih dahulu.");
+            Toast.makeText(this, "Silahkan upload foto terlebih dahulu.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -287,18 +288,24 @@ public class DetailTugasActivity extends AppCompatActivity {
                     try {
                         Log.d("API Response", response.toString());
                         if (response.getString("status").equals("success")) {
-                            showAlertDialog("Berhasil", "Tugas berhasil di-submit.");
+                            // Gantikan AlertDialog dengan Toast
+                            Toast.makeText(DetailTugasActivity.this, "Tugas berhasil di-submit", Toast.LENGTH_SHORT).show();
+
+                            // Arahkan ke TugasFragment
+                            Intent intent = new Intent(DetailTugasActivity.this, TugasFragment.class);
+                            startActivity(intent);
+                            finish(); // Menutup aktivitas saat ini
                         } else {
-                            showAlertDialog("Gagal", "Gagal mengirim tugas. Silakan coba lagi.");
+                            Toast.makeText(DetailTugasActivity.this, "Gagal mengirim tugas. Silakan coba lagi.", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showAlertDialog("Error", "Terjadi kesalahan: " + e.getMessage());
+                        Toast.makeText(DetailTugasActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> {
                     Log.e("API Error", error.getMessage());
-                    showAlertDialog("Perhatian", "Terjadi kesalahan saat mengirim tugas.");
+                    Toast.makeText(DetailTugasActivity.this, "Perhatian: Terjadi kesalahan saat mengirim tugas.", Toast.LENGTH_SHORT).show();
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -311,6 +318,7 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
+
 
     private void showAlertDialog(String title, String message) {
         new AlertDialog.Builder(this)
