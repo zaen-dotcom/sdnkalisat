@@ -1,5 +1,6 @@
 package com.kalisat.edulearn.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -98,51 +99,70 @@ public class DetailTugasActivity extends AppCompatActivity {
         btnKirim.setOnClickListener(v -> submitTask(v));
     }
 
+
     private void getNilaiTugas(TextView tvNilai) {
+        // URL API untuk mengambil nilai tugas
         String url = "http://192.168.159.228:8000/api/tugas/" + id + "/nilai";
         String token = getSharedPreferences("user_session", MODE_PRIVATE).getString("user_token", "");
 
+        // Cek apakah token tersedia
         if (token.isEmpty()) {
             Toast.makeText(this, "Token tidak tersedia. Silakan login ulang.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
+        // Menampilkan ProgressDialog saat proses dimulai
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Memuat nilai...");
+        progressDialog.setCancelable(false);  // Tidak bisa dibatalkan oleh pengguna
+        progressDialog.show();
+
+        // Membuat permintaan API menggunakan JsonObjectRequest
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
-                    try {
-                        if (response.getString("status").equals("success")) {
-                            JSONObject data = response.getJSONObject("data");
+                    // Setelah respons diterima, tambahkan delay 1,5 detik
+                    new Handler().postDelayed(() -> {
+                        // Menyembunyikan ProgressDialog setelah 1,5 detik
+                        progressDialog.dismiss();
 
-                            // Ambil nilai dari respon
-                            String nilai = data.optString("grade", "Belum dinilai");
+                        try {
+                            if (response.getString("status").equals("success")) {
+                                JSONObject data = response.getJSONObject("data");
 
-                            // Tampilkan nilai pada TextView
-                            tvNilai.setText("Nilai: " + nilai);
+                                // Ambil nilai dari respon
+                                String nilai = data.optString("grade", "Belum dinilai");
 
-                            // Menggunakan layout item_pilihfoto untuk menampilkan thumbnail foto
-                            View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
+                                // Tampilkan nilai pada TextView
+                                tvNilai.setText("Nilai: " + nilai);
 
-                            // Set thumbnail atau placeholder pada ImageView
-                            ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
-                            // Gunakan gambar placeholder atau ikon default, misalnya:
-                            imageThumbnail.setImageResource(R.drawable.ic_image);  // Ganti dengan gambar placeholder yang sesuai
+                                // Menggunakan layout item_pilihfoto untuk menampilkan thumbnail foto
+                                View itemView = getLayoutInflater().inflate(R.layout.item_pilihfoto, linearLayoutThumbnails, false);
 
-                            // Sembunyikan tombol X karena foto berasal dari API dan tidak akan dihapus
-                            ImageView imageClose = itemView.findViewById(R.id.ic_remove);
-                            imageClose.setVisibility(View.GONE);
+                                // Set thumbnail atau placeholder pada ImageView
+                                ImageView imageThumbnail = itemView.findViewById(R.id.tempatthumbnail);
+                                imageThumbnail.setImageResource(R.drawable.ic_image);  // Ganti dengan gambar placeholder yang sesuai
 
-                            // Tambahkan ke layout
-                            linearLayoutThumbnails.addView(itemView);
-                        } else {
-                            Toast.makeText(this, "Gagal mendapatkan nilai tugas.", Toast.LENGTH_SHORT).show();
+                                // Sembunyikan tombol X karena foto berasal dari API dan tidak akan dihapus
+                                ImageView imageClose = itemView.findViewById(R.id.ic_remove);
+                                imageClose.setVisibility(View.GONE);
+
+                                // Tambahkan ke layout
+                                linearLayoutThumbnails.addView(itemView);
+                            } else {
+                                Toast.makeText(this, "Gagal mendapatkan nilai tugas.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                    }, 1500); // Delay 1,5 detik
                 },
-                error -> Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show()) {
+                error -> {
+                    // Menyembunyikan ProgressDialog jika terjadi error
+                    progressDialog.dismiss();
+                    Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -152,9 +172,9 @@ public class DetailTugasActivity extends AppCompatActivity {
             }
         };
 
+        // Menambahkan permintaan API ke requestQueue
         requestQueue.add(jsonObjectRequest);
     }
-
 
     private void getDataFromAPI() {
         String url = "http://192.168.159.228:8000/api/tugas/" + id;
@@ -256,12 +276,17 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         // Kompres gambar sebelum mengonversinya ke Base64
         StringBuilder base64Images = new StringBuilder();
+        int imageCount = imageUris.size();
+        int processedCount = 0; // Untuk melacak gambar yang telah diproses
 
+        // Kompres gambar secara berurutan
         for (Uri uri : imageUris) {
             String base64Image = compressImageAndConvertToBase64(uri);
             if (base64Image != null) {
                 base64Images.append(base64Image).append(",");
             }
+
+            processedCount++; // Update jumlah gambar yang telah diproses
         }
 
         // Menghapus tanda koma terakhir
@@ -285,8 +310,17 @@ public class DetailTugasActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Menampilkan ProgressDialog untuk mengirim tugas
+        ProgressDialog submitProgressDialog = new ProgressDialog(this);
+        submitProgressDialog.setMessage("Mengirim tugas...");
+        submitProgressDialog.setCancelable(false);  // Tidak bisa dibatalkan oleh pengguna
+        submitProgressDialog.show();
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonParams,
                 response -> {
+                    // Menyembunyikan ProgressDialog setelah menerima respons
+                    submitProgressDialog.dismiss();
+
                     try {
                         Log.d("API Response", response.toString());
                         if (response.getString("status").equals("success")) {
@@ -295,10 +329,18 @@ public class DetailTugasActivity extends AppCompatActivity {
 
                             // Menambahkan delay 1 detik sebelum refresh halaman
                             new Handler().postDelayed(() -> {
+                                // Menampilkan indikator loading saat halaman di-refresh
+                                ProgressDialog refreshProgressDialog = new ProgressDialog(DetailTugasActivity.this);
+                                refreshProgressDialog.setMessage("Memuat ulang halaman...");
+                                refreshProgressDialog.setCancelable(false);
+                                refreshProgressDialog.show();
+
                                 // Memuat ulang activity DetailTugasActivity
                                 recreate();
-                            }, 1000); // Delay 1 detik (1000 milidetik)
 
+                                // Setelah halaman di-refresh, sembunyikan ProgressDialog
+                                refreshProgressDialog.dismiss();
+                            }, 1500); // Delay
                         } else {
                             Toast.makeText(DetailTugasActivity.this, "Gagal mengirim tugas. Silakan coba lagi.", Toast.LENGTH_SHORT).show();
                         }
@@ -308,6 +350,8 @@ public class DetailTugasActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
+                    // Menyembunyikan ProgressDialog jika terjadi error
+                    submitProgressDialog.dismiss();
                     Log.e("API Error", error.getMessage());
                     Toast.makeText(DetailTugasActivity.this, "Perhatian: Terjadi kesalahan saat mengirim tugas.", Toast.LENGTH_SHORT).show();
                 }) {
@@ -323,8 +367,6 @@ public class DetailTugasActivity extends AppCompatActivity {
         // Pastikan requestQueue sudah diinisialisasi sebelumnya
         requestQueue.add(jsonObjectRequest);
     }
-
-
 
     private void showAlertDialog(String title, String message) {
         new AlertDialog.Builder(this)

@@ -1,7 +1,9 @@
 package com.kalisat.edulearn.Adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
 
         // Set onClickListener untuk berpindah ke DetailTugasActivity
         holder.itemView.setOnClickListener(v -> {
+            // Buka DetailTugasActivity langsung tanpa delay
             Intent intent = new Intent(context, DetailTugasActivity.class);
 
             // Kirim data tugas melalui Intent
@@ -59,6 +62,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
             context.startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {
