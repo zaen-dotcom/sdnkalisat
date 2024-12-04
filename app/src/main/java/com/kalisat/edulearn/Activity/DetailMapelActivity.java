@@ -57,7 +57,7 @@ public class DetailMapelActivity extends AppCompatActivity {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
-                    .commit();
+                    .commitNow();  // Menggunakan commitNow() untuk commit langsung
             return true;
         }
         return false;

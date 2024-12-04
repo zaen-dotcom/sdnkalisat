@@ -73,21 +73,31 @@ public class LoginActivity extends AppCompatActivity {
                             showAlert("Login Gagal", response.getString("message"));
                         }
                     } catch (JSONException e) {
-                        showAlert("Kesalahan", "Kesalahan parsing data!");
+                        showAlert("Kesalahan", "Kesalahan parsing data, mohon coba lagi.");
                     }
                 },
-                error -> showAlert("Kesalahan", "Gagal terhubung ke server!"));
+                error -> {
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
+                        showAlert("Login Gagal", "Username atau password salah.");
+                    } else {
+                        showAlert("Kesalahan", "Gagal terhubung ke server, pastikan koneksi Anda stabil.");
+                    }
+                });
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
 
     private void showAlert(String title, String message) {
-        new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
+
+        // Mengubah warna teks tombol positif (OK)
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.biru_tua));  // Menggunakan warna dari resource
     }
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -288,13 +290,15 @@ public class DetailTugasActivity extends AppCompatActivity {
                     try {
                         Log.d("API Response", response.toString());
                         if (response.getString("status").equals("success")) {
-                            // Gantikan AlertDialog dengan Toast
+                            // Beri notifikasi bahwa tugas berhasil di-submit
                             Toast.makeText(DetailTugasActivity.this, "Tugas berhasil di-submit", Toast.LENGTH_SHORT).show();
 
-                            // Arahkan ke TugasFragment
-                            Intent intent = new Intent(DetailTugasActivity.this, TugasFragment.class);
-                            startActivity(intent);
-                            finish(); // Menutup aktivitas saat ini
+                            // Menambahkan delay 1 detik sebelum refresh halaman
+                            new Handler().postDelayed(() -> {
+                                // Memuat ulang activity DetailTugasActivity
+                                recreate();
+                            }, 1000); // Delay 1 detik (1000 milidetik)
+
                         } else {
                             Toast.makeText(DetailTugasActivity.this, "Gagal mengirim tugas. Silakan coba lagi.", Toast.LENGTH_SHORT).show();
                         }
@@ -316,8 +320,10 @@ public class DetailTugasActivity extends AppCompatActivity {
             }
         };
 
+        // Pastikan requestQueue sudah diinisialisasi sebelumnya
         requestQueue.add(jsonObjectRequest);
     }
+
 
 
     private void showAlertDialog(String title, String message) {
@@ -346,7 +352,7 @@ public class DetailTugasActivity extends AppCompatActivity {
                     false);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 45, baos);
 
             byte[] byteArray = baos.toByteArray();
 
