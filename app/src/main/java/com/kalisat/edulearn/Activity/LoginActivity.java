@@ -5,16 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-
+import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kalisat.edulearn.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etIdentitas, etPassword;
     private Button btnSignIn;
+    private TextView hubAdmin; // Tambahkan variabel untuk TextView hubadmin
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,15 @@ public class LoginActivity extends AppCompatActivity {
         etIdentitas = findViewById(R.id.etIdentitas);
         etPassword = findViewById(R.id.etPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
+        hubAdmin = findViewById(R.id.hubadmin); 
+
+
+        hubAdmin.setOnClickListener(v -> {
+            // Nomor WhatsApp yang akan dihubungi
+            String phoneNumber = "082139512292";
+            String message = "Halo, saya membutuhkan bantuan.";
+            openWhatsApp(phoneNumber, message);
+        });
 
         btnSignIn.setOnClickListener(v -> {
             String nisn = etIdentitas.getText().toString().trim();
@@ -42,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
                 login(nisn, password);
             }
         });
+    }
+
+    private void openWhatsApp(String phoneNumber, String message) {
+        String url = "https://wa.me/" + phoneNumber + "?text=" + message;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(android.net.Uri.parse(url));
+        startActivity(intent);
     }
 
     private void login(String nisn, String password) {

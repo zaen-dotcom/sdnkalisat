@@ -153,10 +153,22 @@ public class DetailTugasActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     try {
                         if (response.getString("status").equals("success")) {
-                            String nilai = response.getJSONObject("data").optString("grade", "Belum dinilai");
+                            // Ambil data JSON
+                            JSONObject data = response.optJSONObject("data");
+
+                            if (data == null) {
+                                // Jika data null, tampilkan toast
+                                Toast.makeText(DetailTugasActivity.this, "Anda belum menyelesaikan tugas ini", Toast.LENGTH_SHORT).show();
+                                tvNilai.setText("Nilai: Tidak ada");
+                                return;
+                            }
+
+                            // Ambil nilai grade
+                            String nilai = data.optString("grade", "Belum dinilai");
                             tvNilai.setText("Nilai: " + nilai);
 
-                            String fotoBase64 = response.getJSONObject("data").optString("foto", null);
+                            // Ambil foto base64
+                            String fotoBase64 = data.optString("foto", null);
                             String savedFotoBase64 = SharedPreferencesUtil.getSavedImageFromPreferences(this);
 
                             if (fotoBase64 != null && !fotoBase64.isEmpty()) {
@@ -187,6 +199,8 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
+
+
 
     private void loadSavedFoto() {
         String savedFotoBase64 = SharedPreferencesUtil.getSavedImageFromPreferences(this);
