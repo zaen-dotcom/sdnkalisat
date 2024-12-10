@@ -46,7 +46,6 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
         holder.tvJudulTugas.setText(tugas.getJudulTugas());
         holder.tvDeadline.setText("Deadline: " + tugas.getDeadline());
 
-        // Set onClickListener untuk berpindah ke DetailTugasActivity
         holder.itemView.setOnClickListener(v -> {
             // Menampilkan ProgressDialog
             ProgressDialog progressDialog = new ProgressDialog(context);
@@ -54,12 +53,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            // Menambahkan delay 1 detik menggunakan Handler sebelum berpindah ke DetailTugasActivity
+
             new Handler().postDelayed(() -> {
-                // Buka DetailTugasActivity setelah 1 detik
+
                 Intent intent = new Intent(context, DetailTugasActivity.class);
 
-                // Kirim data tugas melalui Intent
                 intent.putExtra("id", tugas.getId()); // ID tugas
                 intent.putExtra("id_mapel", idMapel); // ID mapel
                 intent.putExtra("judul_tugas", tugas.getJudulTugas());
@@ -71,11 +69,9 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.TugasViewHol
 
                 // Menutup ProgressDialog setelah berpindah activity
                 progressDialog.dismiss();
-            }, 1000); // 1000 ms = 1 detik
+            }, 1000);
         });
     }
-
-
 
     @Override
     public int getItemCount() {

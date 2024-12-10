@@ -13,6 +13,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kalisat.edulearn.R;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         hubAdmin.setOnClickListener(v -> {
             // Nomor WhatsApp yang akan dihubungi
-            String phoneNumber = "082139512292";
+            String phoneNumber = "6282139512292";
             String message = "Halo, saya membutuhkan bantuan.";
             openWhatsApp(phoneNumber, message);
         });
@@ -60,6 +62,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String nisn, String password) {
+        // Validasi panjang password minimal 8 karakter sebelum mengirim request
+        if (password.length() < 8) {
+            showAlert("Peringatan", "Password harus minimal 8 karakter.");
+            return; // Jangan lanjutkan ke server jika validasi gagal
+        }
+
         String url = "http://192.168.159.228:8000/api/login";
 
         JSONObject requestBody = new JSONObject();
@@ -92,8 +100,32 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 400) {
-                        showAlert("Login Gagal", "Username atau password salah.");
+                    if (error.networkResponse != null) {
+                        int statusCode = error.networkResponse.statusCode;
+                        String message = "Gagal terhubung ke server, pastikan koneksi Anda stabil.";
+
+                        // Cek apakah status code adalah 400 atau tidak
+                        if (statusCode == 400) {
+                            try {
+                                // Jika ada error di body response, coba ambil pesan dari server
+                                String responseBody = new String(error.networkResponse.data);
+                                JSONObject errorResponse = new JSONObject(responseBody);
+                                String errorMessage = errorResponse.optString("message", "Username atau password salah.");
+
+                                // Jika pesan error terkait dengan password yang terlalu pendek
+                                if (errorResponse.has("data") && errorResponse.getJSONObject("data").has("password")) {
+                                    JSONArray passwordErrors = errorResponse.getJSONObject("data").getJSONArray("password");
+                                    String passwordErrorMessage = passwordErrors.getString(0);
+                                    showAlert("Login Gagal", passwordErrorMessage); // Menampilkan pesan password error
+                                } else {
+                                    showAlert("Login Gagal", errorMessage);
+                                }
+                            } catch (JSONException e) {
+                                showAlert("Login Gagal", "Username atau password salah.");
+                            }
+                        } else {
+                            showAlert("Kesalahan", message);
+                        }
                     } else {
                         showAlert("Kesalahan", "Gagal terhubung ke server, pastikan koneksi Anda stabil.");
                     }
@@ -102,6 +134,8 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
+
+
 
     private void showAlert(String title, String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(this)

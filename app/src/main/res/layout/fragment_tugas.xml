@@ -48,7 +48,7 @@
         android:id="@+id/tv_no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tidak ada tugas"
+        android:text="Belum ada tugas"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:visibility="gone"

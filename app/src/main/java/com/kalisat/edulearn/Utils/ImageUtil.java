@@ -19,8 +19,8 @@ public class ImageUtil {
             InputStream inputStream = resolver.openInputStream(imageUri);
             Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
 
-            int maxWidth = 1024;
-            int maxHeight = 1024;
+            int maxWidth = 450;
+            int maxHeight = 450;
             int width = originalBitmap.getWidth();
             int height = originalBitmap.getHeight();
             float scaleFactor = Math.min((float) maxWidth / width, (float) maxHeight / height);
@@ -31,7 +31,7 @@ public class ImageUtil {
                     false);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 45, baos);
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
 
             byte[] byteArray = baos.toByteArray();
             return Base64.encodeToString(byteArray, Base64.DEFAULT);

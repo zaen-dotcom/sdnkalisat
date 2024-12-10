@@ -2,6 +2,8 @@ package com.kalisat.edulearn.Activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,6 +25,7 @@ public class DetailJadwalActivity extends AppCompatActivity {
     private JadwalAdapterGrouped jadwalAdapterGrouped;
     private JadwalViewModel jadwalViewModel;
     private RequestQueue requestQueue;
+    private TextView noJadwalTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,19 @@ public class DetailJadwalActivity extends AppCompatActivity {
         // Inisialisasi ViewModel
         jadwalViewModel = new ViewModelProvider(this).get(JadwalViewModel.class);
 
+        // Inisialisasi TextView
+        noJadwalTextView = findViewById(R.id.nojadwal);
+
         // Observasi data jadwal dari ViewModel
         jadwalViewModel.getJadwalGroupedList().observe(this, groupedList -> {
-            jadwalAdapterGrouped.updateData(groupedList);
+            if (groupedList == null || groupedList.isEmpty()) {
+                noJadwalTextView.setVisibility(View.VISIBLE);  // Menampilkan TextView jika data kosong
+                recyclerView.setVisibility(View.GONE);  // Menyembunyikan RecyclerView
+            } else {
+                noJadwalTextView.setVisibility(View.GONE);   // Menyembunyikan TextView
+                recyclerView.setVisibility(View.VISIBLE);  // Menampilkan RecyclerView
+                jadwalAdapterGrouped.updateData(groupedList);
+            }
         });
 
         // Observasi error

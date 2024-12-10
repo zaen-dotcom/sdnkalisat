@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.view.View;
 import android.widget.*;
@@ -39,6 +40,8 @@ public class DetailTugasActivity extends AppCompatActivity {
     private int id;
     private List<Uri> imageUris = new ArrayList<>();
     private RequestQueue requestQueue;
+
+    private ProgressDialog loadingOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,12 +148,16 @@ public class DetailTugasActivity extends AppCompatActivity {
         String url = "http://192.168.159.228:8000/api/tugas/" + id + "/nilai";
         Map<String, String> headers = getHeaders();
 
-        ProgressDialog progressDialog = createProgressDialog("Memuat nilai...");
+        // Menampilkan ProgressDialog utama untuk pemuatan nilai
+        ProgressDialog progressDialog = new ProgressDialog(DetailTugasActivity.this);
+        progressDialog.setMessage("Memuat nilai...");
+        progressDialog.setCancelable(false); // Mencegah pembatalan oleh pengguna
         progressDialog.show();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
-                    progressDialog.dismiss();
+                    progressDialog.dismiss(); // Menyembunyikan ProgressDialog setelah proses selesai
+
                     try {
                         if (response.getString("status").equals("success")) {
                             // Ambil data JSON
@@ -172,12 +179,32 @@ public class DetailTugasActivity extends AppCompatActivity {
                             String savedFotoBase64 = SharedPreferencesUtil.getSavedImageFromPreferences(this);
 
                             if (fotoBase64 != null && !fotoBase64.isEmpty()) {
-                                if (!fotoBase64.equals(savedFotoBase64)) {
-                                    SharedPreferencesUtil.saveImageToPreferences(this, fotoBase64);
-                                    showExistingFoto(fotoBase64);
-                                } else {
-                                    showExistingFoto(savedFotoBase64);
-                                }
+                                // Menampilkan loading overlay untuk proses decode
+                                showLoadingOverlay();
+
+                                // Gunakan Thread terpisah untuk proses decode
+                                new Thread(() -> {
+                                    // Simulasikan proses decoding atau lakukan decoding gambar di sini
+                                    try {
+                                        // Simulasi waktu decoding selama 2 detik
+                                        Thread.sleep(2000);
+
+                                        if (!fotoBase64.equals(savedFotoBase64)) {
+                                            SharedPreferencesUtil.saveImageToPreferences(this, fotoBase64);
+                                            runOnUiThread(() -> {
+                                                showExistingFoto(fotoBase64); // Menampilkan foto setelah decoding selesai
+                                                hideLoadingOverlay(); // Menyembunyikan loading overlay
+                                            });
+                                        } else {
+                                            runOnUiThread(() -> {
+                                                showExistingFoto(savedFotoBase64);
+                                                hideLoadingOverlay(); // Menyembunyikan loading overlay
+                                            });
+                                        }
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }).start();
                             }
                         } else {
                             showError("Gagal mendapatkan nilai tugas.");
@@ -188,7 +215,7 @@ public class DetailTugasActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    progressDialog.dismiss();
+                    progressDialog.dismiss(); // Menyembunyikan ProgressDialog jika terjadi error
                     showError(error.getMessage());
                 }) {
             @Override
@@ -200,15 +227,31 @@ public class DetailTugasActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void showLoadingOverlay() {
+        // Membuat instance ProgressDialog jika belum ada
+        if (loadingOverlay == null) {
+            loadingOverlay = new ProgressDialog(DetailTugasActivity.this);
+            loadingOverlay.setMessage("Sedang memuat...");
+            loadingOverlay.setCancelable(false);
+        }
 
+
+        loadingOverlay.show();
+    }
+
+    private void hideLoadingOverlay() {
+        // Menyembunyikan ProgressDialog setelah selesai
+        if (loadingOverlay != null && loadingOverlay.isShowing()) {
+            loadingOverlay.dismiss();
+        }
+    }
 
     private void loadSavedFoto() {
         String savedFotoBase64 = SharedPreferencesUtil.getSavedImageFromPreferences(this);
         if (savedFotoBase64 != null && !savedFotoBase64.isEmpty()) {
-            showExistingFoto(savedFotoBase64);  // Menampilkan foto dari SharedPreferences
+            showExistingFoto(savedFotoBase64);
         }
     }
-
 
     private void submitTask() {
         if (imageUris.isEmpty()) {

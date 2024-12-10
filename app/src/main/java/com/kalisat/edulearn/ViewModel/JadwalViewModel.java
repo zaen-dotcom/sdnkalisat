@@ -50,7 +50,7 @@ public class JadwalViewModel extends ViewModel {
     public void fetchJadwal(RequestQueue requestQueue, String token) {
         isLoading.setValue(true);
 
-        String url = "http://192.168.159.228:8000/api/jadwal"; // Ganti dengan URL API Anda
+        String url = "http://192.168.159.228:8000/api/jadwal";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -84,14 +84,11 @@ public class JadwalViewModel extends ViewModel {
                             }
 
 
-                            // Urutkan jadwal berdasarkan urutan hari menggunakan Collections.sort()
                             Collections.sort(groupedList, (o1, o2) -> {
                                 int index1 = hariOrder.indexOf(o1.getHari());
                                 int index2 = hariOrder.indexOf(o2.getHari());
                                 return Integer.compare(index1, index2);
                             });
-
-
 
                             jadwalGroupedList.setValue(groupedList);
                             isLoading.setValue(false);
