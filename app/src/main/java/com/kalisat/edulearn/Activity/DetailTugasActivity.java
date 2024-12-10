@@ -27,20 +27,24 @@ import com.kalisat.edulearn.Utils.SharedPreferencesUtil;  // Import util yang su
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class DetailTugasActivity extends AppCompatActivity {
 
-    private TextView tvJudulTgs, tvTenggat, tvDeskripsi, tvNilai;
+    private TextView tvJudulTgs, tvTenggat, tvDeskripsi, tvNilai, tvStatus;
     private LinearLayout linearLayoutThumbnails;
     private Button btnKirim;
     private int id;
     private List<Uri> imageUris = new ArrayList<>();
     private RequestQueue requestQueue;
-
+    private String tanggalTenggat;
     private ProgressDialog loadingOverlay;
 
     @Override
@@ -68,6 +72,7 @@ public class DetailTugasActivity extends AppCompatActivity {
         tvTenggat = findViewById(R.id.tv_tenggat);
         tvDeskripsi = findViewById(R.id.tv_deskripsi);
         tvNilai = findViewById(R.id.tv_nilai);
+        tvStatus = findViewById(R.id.tv_status);
         linearLayoutThumbnails = findViewById(R.id.linearLayoutThumbnails);
         btnKirim = findViewById(R.id.btn_kirim);
 
@@ -90,7 +95,8 @@ public class DetailTugasActivity extends AppCompatActivity {
                         if (response.getString("status").equals("success")) {
                             JSONObject data = response.getJSONArray("data").getJSONObject(0);
                             tvJudulTgs.setText(data.optString("judul_tugas", "Judul tidak tersedia"));
-                            tvTenggat.setText("Deadline: " + data.optString("deadline", "Tidak ada deadline"));
+                            tanggalTenggat = data.optString("deadline", "Tidak ada deadline");  // Menyimpan tanggal tenggat
+                            tvTenggat.setText("Deadline: " + tanggalTenggat);
                             tvDeskripsi.setText(data.optString("deskripsi", "Deskripsi tidak tersedia"));
                         } else {
                             showError("Gagal mengambil data tugas.");
@@ -143,7 +149,6 @@ public class DetailTugasActivity extends AppCompatActivity {
         }
     }
 
-
     private void getNilaiTugas() {
         String url = "http://192.168.159.228:8000/api/tugas/" + id + "/nilai";
         Map<String, String> headers = getHeaders();
@@ -151,7 +156,7 @@ public class DetailTugasActivity extends AppCompatActivity {
         // Menampilkan ProgressDialog utama untuk pemuatan nilai
         ProgressDialog progressDialog = new ProgressDialog(DetailTugasActivity.this);
         progressDialog.setMessage("Memuat nilai...");
-        progressDialog.setCancelable(false); // Mencegah pembatalan oleh pengguna
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -164,41 +169,40 @@ public class DetailTugasActivity extends AppCompatActivity {
                             JSONObject data = response.optJSONObject("data");
 
                             if (data == null) {
-                                // Jika data null, tampilkan toast
-                                Toast.makeText(DetailTugasActivity.this, "Anda belum menyelesaikan tugas ini", Toast.LENGTH_SHORT).show();
-                                tvNilai.setText("Nilai: Tidak ada");
+                                tvNilai.setText("Nilai: tidak ada");
+                                tvStatus.setText("Belum dikumpulkan");
                                 return;
                             }
 
-                            // Ambil nilai grade
-                            String nilai = data.optString("grade", "Belum dinilai");
+                            String nilai = data.isNull("grade") ? "belum dinilai" : data.optString("grade");
                             tvNilai.setText("Nilai: " + nilai);
 
-                            // Ambil foto base64
+                            String tanggalPengumpulan = data.optString("tanggal", null);
+
+                            // Cek apakah tanggal tenggat dan tanggal pengumpulan ada
+                            if (tanggalTenggat != null && tanggalPengumpulan != null) {
+                                String statusTugas = checkTugasStatus(tanggalTenggat, tanggalPengumpulan);
+                                tvStatus.setText(statusTugas);
+                            }
+
                             String fotoBase64 = data.optString("foto", null);
                             String savedFotoBase64 = SharedPreferencesUtil.getSavedImageFromPreferences(this);
 
                             if (fotoBase64 != null && !fotoBase64.isEmpty()) {
-                                // Menampilkan loading overlay untuk proses decode
                                 showLoadingOverlay();
-
-                                // Gunakan Thread terpisah untuk proses decode
                                 new Thread(() -> {
-                                    // Simulasikan proses decoding atau lakukan decoding gambar di sini
                                     try {
-                                        // Simulasi waktu decoding selama 2 detik
                                         Thread.sleep(2000);
-
                                         if (!fotoBase64.equals(savedFotoBase64)) {
                                             SharedPreferencesUtil.saveImageToPreferences(this, fotoBase64);
                                             runOnUiThread(() -> {
-                                                showExistingFoto(fotoBase64); // Menampilkan foto setelah decoding selesai
-                                                hideLoadingOverlay(); // Menyembunyikan loading overlay
+                                                showExistingFoto(fotoBase64);
+                                                hideLoadingOverlay();
                                             });
                                         } else {
                                             runOnUiThread(() -> {
                                                 showExistingFoto(savedFotoBase64);
-                                                hideLoadingOverlay(); // Menyembunyikan loading overlay
+                                                hideLoadingOverlay();
                                             });
                                         }
                                     } catch (InterruptedException e) {
@@ -215,7 +219,7 @@ public class DetailTugasActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    progressDialog.dismiss(); // Menyembunyikan ProgressDialog jika terjadi error
+                    progressDialog.dismiss();
                     showError(error.getMessage());
                 }) {
             @Override
@@ -226,6 +230,28 @@ public class DetailTugasActivity extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
+
+
+    private String checkTugasStatus(String tanggalTenggat, String tanggalPengumpulan) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date tenggatTugas = sdf.parse(tanggalTenggat);
+            Date tanggalTugas = sdf.parse(tanggalPengumpulan);
+            Date tanggalSekarang = new Date();
+
+            if (tanggalTugas != null && tenggatTugas != null) {
+                if (tanggalTugas.after(tenggatTugas)) {
+                    return "Telat dikumpulkan";
+                } else {
+                    return "Tepat waktu";
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "Status Tidak Diketahui";
+    }
+
 
     private void showLoadingOverlay() {
         // Membuat instance ProgressDialog jika belum ada

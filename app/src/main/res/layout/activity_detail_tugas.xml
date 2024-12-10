@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="170dp"
         android:background="@color/white"
         android:elevation="4dp"
         android:orientation="vertical"
@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp"
-                android:text="Pilih foto"
                 android:backgroundTint="@color/soft_green"
+                android:text="Pilih foto"
                 app:layout_constraintEnd_toStartOf="@+id/btn_kirim"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:text="Nilai: 0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="30dp"
                 android:text="Batas Waktu"
                 android:textColor="@color/darker_gray"
                 android:textSize="14sp"
@@ -80,11 +80,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/ic_kembali" />
 
             <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="8dp"
+                android:text="Status"
+                android:textColor="@color/darker_gray"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_judultgs" />
+
+            <TextView
                 android:id="@+id/tv_judultgs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="5dp"
                 android:text="judul Tugas"
                 android:textColor="@color/black"
                 android:textSize="23sp"
@@ -99,7 +113,8 @@
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="540dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Deksripsi"
                 android:textColor="@color/black"
@@ -128,9 +143,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tempat_thumnailfoto"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="100dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="32dp"
         android:background="@color/white"
         android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

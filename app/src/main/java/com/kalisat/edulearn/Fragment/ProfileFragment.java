@@ -37,7 +37,7 @@ public class ProfileFragment extends Fragment {
     private String userToken;
 
     // Deklarasi TextViews untuk profil
-    private TextView tvnama, tvnisn, tvkelas, tv_nomor;
+    private TextView tvnama, tvnisn, tvkelas, tv_nomor, tvnamawalikelas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,11 +57,12 @@ public class ProfileFragment extends Fragment {
         tvnisn = view.findViewById(R.id.tvnisn);
         tvkelas = view.findViewById(R.id.tvkelas);
         tv_nomor = view.findViewById(R.id.tv_nomor);
+        tvnamawalikelas = view.findViewById(R.id.namawalikelas);
 
-        // Panggil metode untuk memuat data profil
         loadProfile();
 
-        // Setup tombol logout
+        loadWaliKelas();
+
         CardView logoutCard = view.findViewById(R.id.card_logout);
         logoutCard.setOnClickListener(v -> showLogoutConfirmationDialog());
 
@@ -124,6 +125,42 @@ public class ProfileFragment extends Fragment {
         queue.add(request);
     }
 
+    private void loadWaliKelas() {
+        String url = "http://192.168.159.228:8000/api/wali";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        String status = response.getString("status");
+                        if (status.equals("success")) {
+                            JSONObject data = response.getJSONObject("data");
+                            String namaWali = data.getString("nama");
+
+                            tvnamawalikelas.setText(namaWali); // Set nama wali kelas ke TextView
+                        } else {
+                            tvnamawalikelas.setText("Tidak ditemukan");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        tvnamawalikelas.setText("Error memuat data");
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    tvnamawalikelas.setText("Gagal memuat");
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + userToken);
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+        queue.add(request);
+    }
 
     private void openUbahSandiActivity() {
         Intent intent = new Intent(getActivity(), UbahSandiActivity.class);
