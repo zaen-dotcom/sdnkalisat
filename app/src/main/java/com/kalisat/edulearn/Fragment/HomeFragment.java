@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +29,8 @@ import com.android.volley.toolbox.Volley;
 import com.kalisat.edulearn.Activity.DetailJadwalActivity;
 import com.kalisat.edulearn.Activity.IntroActivity;
 import com.kalisat.edulearn.Activity.MainActivity;
+import com.kalisat.edulearn.Activity.PanduanActivity;
+import com.kalisat.edulearn.Activity.TentangActivity;
 import com.kalisat.edulearn.Adapter.JadwalAdapter;
 import com.kalisat.edulearn.Model.Jadwal;
 import com.kalisat.edulearn.Model.ModelJadwalDetail;
@@ -146,6 +149,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupListeners(View rootView) {
+        // Listener untuk membuka TentangActivity
+        ConstraintLayout tentangLayout = rootView.findViewById(R.id.tentang);
+        tentangLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TentangActivity.class);
+            startActivity(intent);
+        });
+
+        // Listener untuk membuka PanduanActivity
+        ConstraintLayout panduanLayout = rootView.findViewById(R.id.panduan);
+        panduanLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PanduanActivity.class);
+            startActivity(intent);
+        });
+
+        // Listener lainnya (contoh untuk profile image)
         ImageView fotoProfil = rootView.findViewById(R.id.profile_image);
         fotoProfil.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -162,8 +180,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
     private void loadUserProfile() {
-        String url = "http://192.168.159.228:8000/api/profile";
+        String url = "http://192.168.218.228:8000/api/profile";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {

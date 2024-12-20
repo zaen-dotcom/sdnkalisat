@@ -87,7 +87,7 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getLatihanSoal(int page) {
-        String url = "http://192.168.159.228:8000/api/latihan-soal/" + idLatihanSoal + "/process?page=" + page;
+        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idLatihanSoal + "/process?page=" + page;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -257,7 +257,7 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
 
 
     private void submitAnswersToServer() {
-        String url = "http://192.168.159.228:8000/api/submit-latihan-soal";
+        String url = "http://192.168.218.228:8000/api/submit-latihan-soal";
 
         JSONObject payload = new JSONObject();
         try {
@@ -282,15 +282,9 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, payload,
                 response -> {
-                    // Simpan status soal telah dikerjakan
-                    SharedPreferences sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("soal_dikerjakan_" + idLatihanSoal, true); // Tandai soal telah dikerjakan
-                    editor.apply();
 
                     Toast.makeText(this, "Jawaban berhasil dikirim!", Toast.LENGTH_SHORT).show();
 
-                    // Kirim hasil kembali ke DetailLatihanSoalActivity
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("result", "completed");
                     setResult(RESULT_OK, resultIntent);

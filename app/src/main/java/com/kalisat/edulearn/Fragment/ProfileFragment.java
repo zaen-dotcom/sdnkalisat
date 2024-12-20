@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
 
     // Metode untuk memuat data profil
     private void loadProfile() {
-        String url = "http://192.168.159.228:8000/api/profile";
+        String url = "http://192.168.218.228:8000/api/profile";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -126,7 +126,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadWaliKelas() {
-        String url = "http://192.168.159.228:8000/api/wali";
+        String url = "http://192.168.218.228:8000/api/wali";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -196,7 +196,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void logout() {
-        String url = "http://192.168.159.228:8000/api/logout";
+        String url = "http://192.168.218.228:8000/api/logout";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 response -> {

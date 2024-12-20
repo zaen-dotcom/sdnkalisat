@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.PanduanActivity">
+
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/panel_header"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ic_kembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back2" />
+
+        <TextView
+            android:id="@+id/tv_panduan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Panduan"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ic_kembali"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/panel_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Section 1: Tugas -->
+            <TextView
+                android:id="@+id/tugas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Tugas"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tugas_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Siswa dapat mengumpulkan tugas dengan memilih foto tugas yang akan dikumpulkan. Setiap siswa hanya diperbolehkan untuk mengumpulkan satu tugas untuk setiap tugas yang diberikan. Setelah mengumpulkan tugas, siswa dapat melihat status pengumpulan tugas mereka, yang dapat berupa Belum Dikumpulkan jika tugas belum dikumpulkan, Telat Dikumpulkan jika tugas dikumpulkan setelah batas waktu, atau Tepat Waktu jika tugas telah berhasil dikumpulkan tepat waktu. Setelah tugas dikumpulkan, nilai tugas akan ditampilkan setelah guru selesai memberikan penilaian. Siswa dapat memeriksa nilai mereka pada bagian tugas yang sudah dikumpulkan begitu nilai tersebut tersedia."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Section 2: Latihan Soal dan Evaluasi -->
+            <TextView
+                android:id="@+id/latihan_soal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Latihan Soal dan Evaluasi"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/latihan_soal_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Siswa dapat mengerjakan latihan soal setelah guru memasukkan latihan soal tersebut ke dalam aplikasi. Begitu siswa memulai mengerjakan, mereka tidak akan bisa kembali ke halaman sebelumnya. Setelah selesai mengerjakan, siswa akan keluar dari proses pengerjaan dan mendapatkan nilai berdasarkan bobot soal yang telah ditentukan. Nilai tersebut akan muncul setelah semua soal dijawab, sesuai dengan aturan yang sudah diatur oleh guru."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Section 3: Jadwal Terstruktur -->
+            <TextView
+                android:id="@+id/jadwal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. Jadwal Terstruktur"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/jadwal_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Siswa dapat melihat jadwal pelajaran untuk hari ini langsung di halaman utama (Home) aplikasi. Selain itu, siswa juga dapat mengakses jadwal lengkap dari hari Senin hingga Minggu, sehingga mereka bisa mempersiapkan diri untuk kegiatan belajar yang akan datang. Dengan fitur ini, siswa dapat lebih mudah mengatur waktu dan memastikan tidak ada jadwal yang terlewat."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Section 4: Profil Pengguna -->
+            <TextView
+                android:id="@+id/profil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4. Profil Pengguna"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profil_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Siswa dapat melihat data profil mereka, yang meliputi informasi seperti nomor, NISN, kelas, dan wali kelas. Selain itu, aplikasi ini juga menyediakan fitur untuk mengubah kata sandi, sehingga siswa dapat memperbarui kata sandi mereka demi menjaga keamanan akun pribadi. Dengan fitur ini, siswa dapat memastikan bahwa data pribadi mereka selalu terjaga dengan baik dan akun tetap aman."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Section 5: Ubah Kata Sandi -->
+            <TextView
+                android:id="@+id/ubah_kata_sandi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5. Ubah Kata Sandi"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ubah_kata_sandi_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Siswa dapat mengubah kata sandi mereka dengan cara memasukkan kata sandi saat ini sebagai verifikasi, kemudian memasukkan kata sandi baru yang diinginkan. Fitur ini memberikan kemudahan bagi siswa untuk menjaga keamanan akun mereka dengan mengganti kata sandi secara berkala, jika diperlukan. Setelah berhasil, kata sandi baru akan diterapkan dan digunakan untuk login ke akun."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

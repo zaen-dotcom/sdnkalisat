@@ -40,7 +40,7 @@ public class MataPelajaranViewModel extends AndroidViewModel {
     }
 
     public void fetchMataPelajaran() {
-        String url = "http://192.168.159.228:8000/api/mapel-kelas";
+        String url = "http://192.168.218.228:8000/api/mapel-kelas";
 
         // Ambil token dari SharedPreferences
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("user_session", Context.MODE_PRIVATE);

@@ -49,7 +49,7 @@ public class TugasViewModel extends AndroidViewModel {
     }
 
     public void fetchTugas(int idMapel) {
-        String url = "http://192.168.159.228:8000/api/mapel-kelas/" + idMapel + "/tugas";
+        String url = "http://192.168.218.228:8000/api/mapel-kelas/" + idMapel + "/tugas";
 
         // Ambil token dari SharedPreferences
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("user_session", Context.MODE_PRIVATE);

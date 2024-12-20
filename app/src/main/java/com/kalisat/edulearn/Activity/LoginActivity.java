@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             return; // Jangan lanjutkan ke server jika validasi gagal
         }
 
-        String url = "http://192.168.159.228:8000/api/login";
+        String url = "http://192.168.218.228:8000/api/login";
 
         JSONObject requestBody = new JSONObject();
         try {

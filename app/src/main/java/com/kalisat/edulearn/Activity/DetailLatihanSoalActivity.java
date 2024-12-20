@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -59,14 +60,6 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
         // Ambil ID soal dari Intent
         idSoal = getIntent().getIntExtra("id_soal", -1);
 
-        // Periksa apakah soal sudah dikerjakan
-        SharedPreferences sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE);
-        boolean soalDikerjakan = sharedPreferences.getBoolean("soal_dikerjakan_" + idSoal, false);
-
-        if (soalDikerjakan) {
-            btnMulai.setVisibility(View.GONE); // Sembunyikan tombol Mulai jika soal sudah dikerjakan
-        }
-
         if (idSoal != -1) {
             // Tampilkan progress bar
             progressBar.setVisibility(View.VISIBLE);
@@ -113,7 +106,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getDetailLatihanSoal(int idSoal) {
-        String url = "http://192.168.159.228:8000/api/latihan-soal/" + idSoal;
+        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idSoal;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -161,34 +154,45 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getNilaiLatihanSoal(int idSoal) {
-        String url = "http://192.168.159.228:8000/api/latihan-soal/" + idSoal + "/nilai";
+        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idSoal + "/nilai";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
-                    try {
-                        // Periksa status respons
-                        if (response.getString("status").equals("success")) {
-                            // Akses objek 'data' dan ambil nilai
-                            JSONObject dataObj = response.getJSONObject("data");
+                    Log.d("API_Response", response.toString());
 
-                            if (dataObj != null) {
-                                // Ambil nilai dari key "Nilai"
-                                int nilaiSoal = dataObj.getInt("Nilai");
+                    String status = response.optString("status", "failed");
+                    if ("success".equals(status)) {
+                        JSONObject dataObj = response.optJSONObject("data");
+                        if (dataObj != null) {
+                            String nilaiSoal = dataObj.optString("Nilai", null);
 
-                                // Update UI untuk menampilkan nilai (hanya angka)
-                                tvNilai.setText(String.valueOf(nilaiSoal));
+                            Log.d("Nilai_Latihan", "Nilai: " + nilaiSoal);
+
+                            if (nilaiSoal != null && !nilaiSoal.equals("null") && !nilaiSoal.isEmpty()) {
+                                btnMulai.setVisibility(View.GONE);
+                                Toast.makeText(this, "Latihan soal sudah dikerjakan", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(this, "Data nilai tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                                btnMulai.setVisibility(View.VISIBLE);
+                                Toast.makeText(this, "Latihan soal belum dikerjakan.", Toast.LENGTH_SHORT).show();
                             }
+
+                            // Update UI untuk nilai, tampilkan "-" jika null
+                            tvNilai.setText(nilaiSoal != null && !nilaiSoal.equals("null") && !nilaiSoal.isEmpty() ? nilaiSoal : "-");
                         } else {
-                            Toast.makeText(this, "Gagal memuat nilai soal.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Data nilai tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                            btnMulai.setVisibility(View.VISIBLE);
+                            tvNilai.setText("-");
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Latihan soal belum diselesaikan", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Gagal memuat nilai soal.", Toast.LENGTH_SHORT).show();
+                        tvNilai.setText("-");
                     }
                 },
-                error -> Toast.makeText(this, "Gagal memuat data nilai.", Toast.LENGTH_SHORT).show()) {
+                error -> {
+                    Log.e("API_Error", "Error: ", error);
+                    Toast.makeText(this, "Gagal memuat data nilai. Cek koneksi Anda.", Toast.LENGTH_SHORT).show();
+                    tvNilai.setText("-"); // Tampilkan "-" jika terjadi error
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();

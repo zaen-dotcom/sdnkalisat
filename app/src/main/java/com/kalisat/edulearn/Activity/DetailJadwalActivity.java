@@ -49,11 +49,11 @@ public class DetailJadwalActivity extends AppCompatActivity {
         // Observasi data jadwal dari ViewModel
         jadwalViewModel.getJadwalGroupedList().observe(this, groupedList -> {
             if (groupedList == null || groupedList.isEmpty()) {
-                noJadwalTextView.setVisibility(View.VISIBLE);  // Menampilkan TextView jika data kosong
-                recyclerView.setVisibility(View.GONE);  // Menyembunyikan RecyclerView
+                noJadwalTextView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             } else {
-                noJadwalTextView.setVisibility(View.GONE);   // Menyembunyikan TextView
-                recyclerView.setVisibility(View.VISIBLE);  // Menampilkan RecyclerView
+                noJadwalTextView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 jadwalAdapterGrouped.updateData(groupedList);
             }
         });

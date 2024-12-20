@@ -82,7 +82,7 @@ public class UbahSandiActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://192.168.159.228:8000/api/update-password";
+        String url = "http://192.168.218.228:8000/api/update-password";
 
         // Buat request untuk mengganti password
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
