@@ -50,7 +50,7 @@ public class LatihanSoalViewModel extends AndroidViewModel {
     }
 
     public void fetchLatihanSoal(int idMapel) {
-        String url = "http://192.168.218.228:8000/api/mapel-kelas/" + idMapel + "/latihan-soal";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/mapel-kelas/" + idMapel + "/latihan-soal";
 
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("user_session", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("user_token", "");

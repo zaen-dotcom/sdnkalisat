@@ -82,7 +82,7 @@ public class DetailTugasActivity extends AppCompatActivity {
     }
 
     private void getDataFromAPI() {
-        String url = "http://192.168.218.228:8000/api/tugas/" + id;
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/tugas/" + id;
         Map<String, String> headers = getHeaders();
 
         ProgressDialog progressDialog = createProgressDialog("Memuat data tugas...");
@@ -150,7 +150,7 @@ public class DetailTugasActivity extends AppCompatActivity {
     }
 
     private void getNilaiTugas() {
-        String url = "http://192.168.218.228:8000/api/tugas/" + id + "/nilai";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/tugas/" + id + "/nilai";
         Map<String, String> headers = getHeaders();
 
         // Menampilkan ProgressDialog utama untuk pemuatan nilai
@@ -285,7 +285,7 @@ public class DetailTugasActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://192.168.218.228:8000/api/submit-tugas";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/submit-tugas";
         Map<String, String> headers = getHeaders();
         JSONObject jsonParams = new JSONObject();
 

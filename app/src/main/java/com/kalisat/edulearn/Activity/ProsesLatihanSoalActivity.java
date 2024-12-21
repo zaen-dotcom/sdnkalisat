@@ -87,7 +87,7 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getLatihanSoal(int page) {
-        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idLatihanSoal + "/process?page=" + page;
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/latihan-soal/" + idLatihanSoal + "/process?page=" + page;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -257,7 +257,7 @@ public class ProsesLatihanSoalActivity extends AppCompatActivity {
 
 
     private void submitAnswersToServer() {
-        String url = "http://192.168.218.228:8000/api/submit-latihan-soal";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/submit-latihan-soal";
 
         JSONObject payload = new JSONObject();
         try {

@@ -106,7 +106,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getDetailLatihanSoal(int idSoal) {
-        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idSoal;
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/latihan-soal/" + idSoal;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -154,7 +154,7 @@ public class DetailLatihanSoalActivity extends AppCompatActivity {
     }
 
     private void getNilaiLatihanSoal(int idSoal) {
-        String url = "http://192.168.218.228:8000/api/latihan-soal/" + idSoal + "/nilai";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/latihan-soal/" + idSoal + "/nilai";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {

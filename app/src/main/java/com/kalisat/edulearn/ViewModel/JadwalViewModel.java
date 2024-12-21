@@ -50,7 +50,7 @@ public class JadwalViewModel extends ViewModel {
     public void fetchJadwal(RequestQueue requestQueue, String token) {
         isLoading.setValue(true);
 
-        String url = "http://192.168.218.228:8000/api/jadwal";
+        String url = "https://wstif23.myhost.id/kelas_b/team_1/api/jadwal";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
